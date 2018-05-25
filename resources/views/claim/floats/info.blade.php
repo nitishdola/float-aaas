@@ -3,8 +3,8 @@
 @section('main_content')
 <div class="card">
   <div class="card-header">
-    <?php $str = 'cc+YmFzZTY0IGVuY29kZWQgc3RyaW5n'; ?>
-    <small>Aad <?php echo base64_decode($str); ?></small>
+    {{ $float->patient_name }}
+    <small>Info</small>
   </div>
   <div class="card-body">
     <h5>Patient Info</h5>
@@ -109,6 +109,96 @@
           <td>{{ $float->payee_bank_ifsc_code }}</td>
         </tr>
       </table>
+
+      <div class="col-md-1 pull-right">
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal">
+          <i class="fa fa-telegram" aria-hidden="true"></i> Inspect Float
+        </button>
+      </div>
+
+  </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        
+        <table class="table table-bordered table-responsive-sm table-sm">
+          <thead>
+            <tr>
+              <th>Document Name</th>
+              <th>Received</th>
+              <th>Not Received</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @foreach(Helper::claimRequirements() as $k => $v)
+            <tr>
+              <td>{{ $v->name }}</td>
+              <td>
+                <div class="roundedTwo">
+                  <input type="checkbox" name="checkboxG1" id="checkboxG1" class="css-checkbox" />
+                  <label for="checkboxG1" class="css-label">Option 1</label>
+                </div>
+              </td>
+              <td>
+                <div class="roundedTwo">
+                  <input type="checkbox" name="checkboxG1" id="checkboxG1" class="css-checkbox" />
+                  <label for="checkboxG1" class="css-label">Option 1</label>
+                </div>
+              </td>
+            </tr>  
+            @endforeach
+          </tbody>
+        </table>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
   </div>
 </div>
 @endsection
+
+
+
+@section('pageCss')
+<style type="text/css">
+
+input[type=checkbox].css-checkbox {
+  position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+}
+
+input[type=checkbox].css-checkbox + label.css-label {
+  padding-left:15px;
+  height:20px; 
+  display:inline-block;
+  line-height:20px;
+  background-repeat:no-repeat;
+  background-position: 0 0;
+  font-size:20px;
+  vertical-align:middle;
+  cursor:pointer;
+
+}
+
+input[type=checkbox].css-checkbox:checked + label.css-label {
+  background-position: 0 -50px;
+}
+label.css-label {
+  background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_6a85234bd18e936e19750515adec25ca.png);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+</style>
+@stop
