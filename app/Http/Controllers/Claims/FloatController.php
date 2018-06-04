@@ -21,4 +21,8 @@ class FloatController extends Controller
 
     	return view('claim.floats.info', compact('float'));
     } 
+
+    public function processFloat(Request $request, $float_id = null) {
+    	dd($request->all());
+    }
 }

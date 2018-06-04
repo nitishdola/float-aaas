@@ -41,6 +41,19 @@ class LoginController extends Controller
         $this->middleware('claim.guest', ['except' => 'logout']);
     }
 
+
+    /**
+     * Check either username or email.
+     * @return string
+     */
+    public function username()
+    {
+        $identity  = request()->get('username');
+        $fieldName = filter_var($identity, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        request()->merge([$fieldName => $identity]);
+        return $fieldName;
+    }
+
     /**
      * Show the application's login form.
      *

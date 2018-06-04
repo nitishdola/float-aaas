@@ -3,8 +3,7 @@
 @section('main_content')
 <div class="card">
   <div class="card-header">
-    {{ $float->patient_name }}
-    <small>Info</small>
+    {{ $float->patient_name }} /{{ $float->tpa_claim_reference_number }}/ {{ $float->hospital_name }} 
   </div>
   <div class="card-body">
     <h5>Patient Info</h5>
@@ -14,7 +13,9 @@
           <td>{{ $float->patient_name }}</td>
 
           <th>CCN Number</th>
-          <td>{{ $float->tpa_claim_reference_number }}</td>
+          <td><input id="ccn_no" class="form-control" readonly="readonly" value="{{ $float->tpa_claim_reference_number }}">
+            <a href="javascript:void(0)" class="btn btn-link" onclick="copyCCN();">Copy</a>
+          </td>
 
           <th>Patient Age</th>
           <td>{{ $float->patient_age }}</td>
@@ -66,139 +67,216 @@
           <td colspan="2">{{ $float->enr_urn }}</td>
         </tr>
       </table>
+    </div>
+</div>
 
+<div class="col-md-12">
 
-      <h5>Hospital Info</h5>
-      <table class="table table-bordered table-condensed">
-        <tr>
-          <th>Hospital Name</th>
-          <td>{{ $float->hospital_name }}</td>
+    <a href="http://aaa-assam.in/FOLLOWUP/SEARCHPATIANTREGISTATION.ASPX?ROLE=IC&STATUS=179" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-search" aria-hidden="true"></i> Search Patient Data</a>
 
-          <th>Hospital Type</th>
-          <td>{{ $float->hospital_type }}</td>
+    <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a> 
 
-          <th>Hospital Email ID</th>
-          <td>{{ $float->hospital_email_id }}</td>
-
-          <th>Hospital Mobile Number</th>
-          <td>{{ $float->hospital_mobile_number }}</td>
-
-          <th>Hospital PAN</th>
-          <td>{{ $float->hospital_pan_number }}</td>
-
-          <th>Hospital Payee</th>
-          <td>{{ $float->hospital_payee_name }}</td>
-
-          <th>Payee Bank</th>
-          <td>{{ $float->payee_bank_name }}</td>
-        </tr>
-
-        <tr>
-          
-
-          <th>Bank Address</th>
-          <td>{{ $float->payee_branch_address }}</td>
-
-          <th>Account Type</th>
-          <td>{{ $float->payee_account_type }}</td>
-
-          <th>A/C No.</th>
-          <td>{{ $float->payee_bank_account_number }}</td>
-
-          <th>IFSC Code</th>
-          <td>{{ $float->payee_bank_ifsc_code }}</td>
-        </tr>
-      </table>
-
-      <div class="col-md-1 pull-right">
-        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal">
-          <i class="fa fa-telegram" aria-hidden="true"></i> Inspect Float
-        </button>
-      </div>
-
-  </div>
 </div>
 
 
-<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        
-        <table class="table table-bordered table-responsive-sm table-sm">
-          <thead>
-            <tr>
-              <th>Document Name</th>
-              <th>Received</th>
-              <th>Not Received</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            @foreach(Helper::claimRequirements() as $k => $v)
-            <tr>
-              <td>{{ $v->name }}</td>
-              <td>
-                <div class="roundedTwo">
-                  <input type="checkbox" name="checkboxG1" id="checkboxG1" class="css-checkbox" />
-                  <label for="checkboxG1" class="css-label">Option 1</label>
-                </div>
-              </td>
-              <td>
-                <div class="roundedTwo">
-                  <input type="checkbox" name="checkboxG1" id="checkboxG1" class="css-checkbox" />
-                  <label for="checkboxG1" class="css-label">Option 1</label>
-                </div>
-              </td>
-            </tr>  
-            @endforeach
-          </tbody>
-        </table>
-        
+{!! Form::open(array('route' => ['claim.floats.process', $float->id], 'id' => 'floats.process', 'class' => '')) !!}
+<div class="row">
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header">
+        Billing
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+      <div class="card-body">
+        <div class="form-group {{ $errors->has('bill_amount_from_hospital') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Invoice/Bills From Hospital(Rs.)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('bill_amount_from_hospital', null, ['class' => 'form-control required', 'id' => 'bill_amount_from_hospital', 'placeholder' => 'Invoice/Bills From Hospital(Rs.)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+            </div>
+          {!! $errors->first('bill_amount_from_hospital', '<span class="help-inline">:message</span>') !!}
+        </div>
+        <div class="form-group {{ $errors->has('amount_as_per_package') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Amount as per Package Rate (Rs)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('amount_as_per_package', null, ['class' => 'form-control required', 'id' => 'amount_as_per_package', 'placeholder' => 'Amount as per Package Rate (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('amount_as_per_package', '<span class="help-inline">:message</span>') !!}
+        </div>
+        <div class="form-group {{ $errors->has('implants') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Implants/Stents (Rs)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('implants', null, ['class' => 'form-control required', 'id' => 'implants', 'placeholder' => 'Implants/Stents (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('implants', '<span class="help-inline">:message</span>') !!}
+        </div>
+
+        <div class="form-group {{ $errors->has('travelling_allowance') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Travelling Allowance (Rs)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('travelling_allowance', null, ['class' => 'form-control required', 'id' => 'travelling_allowance', 'placeholder' => 'Travelling Allowance (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('travelling_allowance', '<span class="help-inline">:message</span>') !!}
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header">
+        TA/Deduction/TDS
+      </div>
+      <div class="card-body">
+        
+         <div class="form-group {{ $errors->has('total') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Total Amount=(Package rate +Implants/stents + TA) (Rs)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('total', null, ['class' => 'form-control required', 'id' => 'total', 'placeholder' => 'Total Amount(Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('total', '<span class="help-inline">:message</span>') !!}
+        </div>
+
+        <div class="form-group {{ $errors->has('deduction') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Deduction (Rs)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('deduction', null, ['class' => 'form-control required', 'id' => 'deduction', 'placeholder' => 'Deduction (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('deduction', '<span class="help-inline">:message</span>') !!}
+        </div>
+        <div class="form-group {{ $errors->has('tds') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>TDS Amount 10% (Rs)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('tds', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('tds', '<span class="help-inline">:message</span>') !!}
+        </div>
+
+        <div class="form-group {{ $errors->has('amount_on_billing') ? 'has-error' : ''}}">
+          <label class="col-md-12 control-label"><strong>Amount on Billing (Rs) =Total Amount - (Deduction +TDS)*</strong></label>
+            <div class="col-md-12">
+              {!! Form::number('amount_on_billing', null, ['class' => 'form-control required', 'id' => 'amount_on_billing', 'placeholder' => 'Billing Amount', 'autocomplete' => 'off', 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('amount_on_billing', '<span class="help-inline">:message</span>') !!}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-header">
+        Documents Received
+      </div>
+      <div class="card-body">
+
+        @foreach(Helper::claimRequirements() as $k => $v)
+        <div class="row">
+          <div class="col-md-7"><strong>{{ $v->name }}</strong> *</div>
+          <div class="col-md-5">
+            <div class="form-group">
+              <div class="col-sm-7 col-md-7">
+                <div class="input-group">
+                  <div class="btn-group radio-group">
+                     <label class="btn btn-primary not-active">Yes <input type="radio" value="Yes" name="documents_{{$v->id}}" required="required"></label>
+                     <label class="btn btn-primary not-active">No <input type="radio" value="No" name="documents_{{$v->id}}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+        @endforeach
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        Remarks
+      </div>
+      <div class="card-body">
+        
+         <div class="form-group {{ $errors->has('remarks') ? 'has-error' : ''}}">
+            <div class="col-md-12">
+              {!! Form::textarea('remarks', null, ['class' => 'form-control required', 'id' => 'remarks', 'placeholder' => 'Remarks', 'rows' => 4, 'required' => 'true']) !!}
+            </div>
+          {!! $errors->first('remarks', '<span class="help-inline">:message</span>') !!}
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+{!! Form::close() !!}
+      
 @endsection
 
 
 
 @section('pageCss')
+
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+
 <style type="text/css">
-
-input[type=checkbox].css-checkbox {
-  position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+.radio-group label {
+   overflow: hidden;
+} .radio-group input {
+    /* This is on purpose for accessibility. Using display: hidden is evil.
+    This makes things keyboard friendly right out tha box! */
+   height: 1px;
+   width: 1px;
+   position: absolute;
+   top: -20px;
+} .radio-group .not-active  {
+   color: #3276b1;
+   background-color: #fff;
 }
 
-input[type=checkbox].css-checkbox + label.css-label {
-  padding-left:15px;
-  height:20px; 
-  display:inline-block;
-  line-height:20px;
-  background-repeat:no-repeat;
-  background-position: 0 0;
-  font-size:20px;
-  vertical-align:middle;
-  cursor:pointer;
-
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
 }
 
-input[type=checkbox].css-checkbox:checked + label.css-label {
-  background-position: 0 -50px;
-}
-label.css-label {
-  background-image:url(http://csscheckbox.com/checkboxes/u/csscheckbox_6a85234bd18e936e19750515adec25ca.png);
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
+#tallModal .modal-body p { margin-bottom: 900px }
 </style>
+@stop
+
+@section('pageJs')
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
+
+<script>
+
+copyCCN = function() {
+  /* Get the text field */
+  var copyText = $('#ccn_no');
+
+  /* Select the text field */
+  copyText.select();
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+
+  /* Alert the copied text */
+  alert("Copied the text: " + copyText.val());
+}
+
+$(function() {
+
+
+    $('#remarks').summernote({ height: 200 });
+
+    $(".modal-wide").on("show.bs.modal", function() {
+      var height = $(window).height() - 200;
+      $(this).find(".modal-body").css("max-height", height);
+    });
+
+    // Input radio-group visual controls
+    $('.radio-group label').on('click', function(){
+        $(this).removeClass('not-active').siblings().addClass('not-active');
+    });
+})
+</script>
 @stop
