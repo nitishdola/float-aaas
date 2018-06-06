@@ -28,10 +28,10 @@
         </tr>
 
         <tr>
-          <th>Date of Admission</th>
+          <th width="13%">Date of Admission</th>
           <td>{{ date('d-m-Y', strtotime($float->date_of_admission)) }}</td>
 
-          <th>Date of Discharge</th>
+          <th width="13%">Date of Discharge</th>
           <td>{{ date('d-m-Y', strtotime($float->date_of_discharge)) }}</td>                
 
           <th>Claim Amount</th>
@@ -71,13 +71,9 @@
 </div>
 
 <div class="col-md-12">
-
     <a href="http://aaa-assam.in/FOLLOWUP/SEARCHPATIANTREGISTATION.ASPX?ROLE=IC&STATUS=179" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-search" aria-hidden="true"></i> Search Patient Data</a>
-
     <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a> 
-
 </div>
-
 
 {!! Form::open(array('route' => ['claim.floats.process', $float->id], 'id' => 'floats.process', 'class' => '')) !!}
 <div class="row">
@@ -94,7 +90,7 @@
             </div>
           {!! $errors->first('bill_amount_from_hospital', '<span class="help-inline">:message</span>') !!}
         </div>
-        <div class="form-group {{ $errors->has('amount_as_per_package') ? 'has-error' : ''}}">
+        <div class="form-group {{ $errors->has('amount_as_per_package') ? 'has-error' : ''}}" >
           <label class="col-md-12 control-label"><strong>Amount as per Package Rate (Rs)*</strong></label>
             <div class="col-md-12">
               {!! Form::number('amount_as_per_package', null, ['class' => 'form-control required', 'id' => 'amount_as_per_package', 'placeholder' => 'Amount as per Package Rate (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
@@ -116,8 +112,6 @@
             </div>
           {!! $errors->first('travelling_allowance', '<span class="help-inline">:message</span>') !!}
         </div>
-
-
       </div>
     </div>
   </div>
@@ -195,12 +189,34 @@
         Remarks
       </div>
       <div class="card-body">
-        
          <div class="form-group {{ $errors->has('remarks') ? 'has-error' : ''}}">
             <div class="col-md-12">
               {!! Form::textarea('remarks', null, ['class' => 'form-control required', 'id' => 'remarks', 'placeholder' => 'Remarks', 'rows' => 4, 'required' => 'true']) !!}
             </div>
           {!! $errors->first('remarks', '<span class="help-inline">:message</span>') !!}
+        </div>
+
+
+        <div class="form-group" style="margin-top:100px;">
+            <label class="col-md-5 control-label"><strong>Can Be Processed ?*</strong></label>
+            <div class="col-md-7">
+                <div class="toggle-radio">
+                  <input type="radio" name="processed" id="yes" checked>
+                  <input type="radio" name="processed" id="no">
+                  <div class="switch">
+                    <label for="yes">Yes</label>
+                    <label for="no">No</label>
+                    <span></span>
+                  </div>
+                </div>
+            </div>
+          {!! $errors->first('remarks', '<span class="help-inline">:message</span>') !!}
+        </div>
+
+
+
+        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : ''}} pull-right">
+            <button type="submit" class="btn btn-success"><i class="fa fa-telegram" aria-hidden="true"></i> SUBMIT</button>
         </div>
       </div>
     </div>
@@ -232,14 +248,96 @@
    background-color: #fff;
 }
 
-.modal.modal-wide .modal-dialog {
-  width: 90%;
-}
-.modal-wide .modal-body {
-  overflow-y: auto;
+.switch {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 50px;
+    text-align: center;
+    margin: -30px 0 0 -75px;
+    background: #00bc9c;
+    transition: all 0.2s ease;
+    border-radius: 25px;
+  }
+  .switch span {
+    position: absolute;
+    width: 20px;
+    height: 4px;
+    top: 50%;
+    left: 50%;
+    margin: -2px 0px 0px -4px;
+    background: #fff;
+    display: block;
+    transform: rotate(-45deg);
+    transition: all 0.2s ease;
+  }
+  .switch span:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 4px;
+    height: 12px;
+    margin-top: -8px;
+    background: #fff;
+    transition: all 0.2s ease;
+  }
+  input[type=radio] {
+    display: none;
+  }
+  .switch label {
+    cursor: pointer;
+    color: rgba(0,0,0,0.2);
+    width: 60px;
+    line-height: 50px;
+    transition: all 0.2s ease;
+  }
+  label[for=yes] {
+    position: absolute;
+    left: 0px;
+    height: 20px;
+  }
+  label[for=no] {
+    position: absolute;
+    right: 0px;
+  }
+  #no:checked ~ .switch {
+    background: #eb4f37;
+  }
+  #no:checked ~ .switch span {
+    background: #fff;
+    margin-left: -8px;
+  }
+  #no:checked ~ .switch span:after {
+    background: #fff;
+    height: 20px;
+    margin-top: -8px;
+    margin-left: 8px;
+  }
+  #yes:checked ~ .switch label[for=yes] {
+    color: #fff;
+  }
+  #no:checked ~ .switch label[for=no] {
+    color: #fff;
+  }
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active
+{
+    outline:0px !important;
+    -webkit-appearance:none;
 }
 
-#tallModal .modal-body p { margin-bottom: 900px }
 </style>
 @stop
 
@@ -263,19 +361,69 @@ copyCCN = function() {
   alert("Copied the text: " + copyText.val());
 }
 
+
+calculateTotal = function() {
+  bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
+  amount_as_per_package     = $('#amount_as_per_package').val();
+  implants                  = $('#implants').val();
+  travelling_allowance      = $('#travelling_allowance').val();
+
+  deduction = $('#deduction').val();
+
+  if(bill_amount_from_hospital == '') {
+    bill_amount_from_hospital = 0;
+  }
+
+  if(amount_as_per_package == '') {
+    amount_as_per_package = 0;
+  }
+
+  if(implants == '') {
+    implants = 0;
+  }
+
+  if(travelling_allowance == '') {
+    travelling_allowance = 0;
+  }
+
+  if(deduction == '') {
+    deduction = 0;
+  }
+
+
+  var totalBill = parseInt(bill_amount_from_hospital)+parseInt(implants)+parseInt(travelling_allowance);
+  $('#total').val(totalBill);
+
+
+
+  tds = parseFloat((0.1*totalBill));
+
+  $('#tds').val(tds);
+
+  $('#amount_on_billing').val(totalBill - parseInt(deduction) - tds);
+}
 $(function() {
 
-
     $('#remarks').summernote({ height: 200 });
-
-    $(".modal-wide").on("show.bs.modal", function() {
-      var height = $(window).height() - 200;
-      $(this).find(".modal-body").css("max-height", height);
-    });
 
     // Input radio-group visual controls
     $('.radio-group label').on('click', function(){
         $(this).removeClass('not-active').siblings().addClass('not-active');
+    });
+
+    $('#amount_as_per_package').keyup(function(){
+      var bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
+      if(bill_amount_from_hospital != '') {
+        if(bill_amount_from_hospital != $(this).val()) {
+          $('#amount_as_per_package').css( 'border', "1px solid red")
+        }else{
+          $('#amount_as_per_package').css( 'border', "1px solid #ccc")
+        }
+      }
+    });
+
+    $('#bill_amount_from_hospital,#amount_as_per_package,#implants,#travelling_allowance,#deduction').keyup(function(){ 
+      calculateTotal();
     });
 })
 </script>

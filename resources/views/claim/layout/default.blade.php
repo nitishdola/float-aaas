@@ -21,6 +21,11 @@
       .fa-heartbeat {
         color: #F10202;
       }
+      .form-control:focus{
+        border-color: #cccccc;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+      }
     </style>
     @yield('pageCss')
 
