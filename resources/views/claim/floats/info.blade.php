@@ -83,24 +83,24 @@
         Billing
       </div>
       <div class="card-body">
-        <div class="form-group {{ $errors->has('bill_amount_from_hospital') ? 'has-error' : ''}}">
+        <div class="form-group {{ $errors->has('invoice_from_hospital') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Invoice/Bills From Hospital(Rs.)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('bill_amount_from_hospital', null, ['class' => 'form-control required', 'id' => 'bill_amount_from_hospital', 'placeholder' => 'Invoice/Bills From Hospital(Rs.)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('invoice_from_hospital', null, ['class' => 'form-control required', 'id' => 'bill_amount_from_hospital', 'placeholder' => 'Invoice/Bills From Hospital(Rs.)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
-          {!! $errors->first('bill_amount_from_hospital', '<span class="help-inline">:message</span>') !!}
+          {!! $errors->first('invoice_from_hospital', '<span class="help-inline">:message</span>') !!}
         </div>
         <div class="form-group {{ $errors->has('amount_as_per_package') ? 'has-error' : ''}}" >
           <label class="col-md-12 control-label"><strong>Amount as per Package Rate (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('amount_as_per_package', null, ['class' => 'form-control required', 'id' => 'amount_as_per_package', 'placeholder' => 'Amount as per Package Rate (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('amount_as_per_package', null, ['class' => 'form-control required', 'id' => 'amount_as_per_package', 'placeholder' => 'Amount as per Package Rate (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('amount_as_per_package', '<span class="help-inline">:message</span>') !!}
         </div>
         <div class="form-group {{ $errors->has('implants') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Implants/Stents (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('implants', null, ['class' => 'form-control required', 'id' => 'implants', 'placeholder' => 'Implants/Stents (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('implants', null, ['class' => 'form-control required', 'id' => 'implants', 'placeholder' => 'Implants/Stents (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('implants', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -108,7 +108,7 @@
         <div class="form-group {{ $errors->has('travelling_allowance') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Travelling Allowance (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('travelling_allowance', null, ['class' => 'form-control required', 'id' => 'travelling_allowance', 'placeholder' => 'Travelling Allowance (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('travelling_allowance', null, ['class' => 'form-control required', 'id' => 'travelling_allowance', 'placeholder' => 'Travelling Allowance (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('travelling_allowance', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -125,7 +125,7 @@
          <div class="form-group {{ $errors->has('total') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Total Amount=(Package rate +Implants/stents + TA) (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('total', null, ['class' => 'form-control required', 'id' => 'total', 'placeholder' => 'Total Amount(Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('total_amount', null, ['class' => 'form-control required', 'id' => 'total', 'placeholder' => 'Total Amount(Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('total', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -133,14 +133,14 @@
         <div class="form-group {{ $errors->has('deduction') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Deduction (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('deduction', null, ['class' => 'form-control required', 'id' => 'deduction', 'placeholder' => 'Deduction (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('deduction', null, ['class' => 'form-control required', 'id' => 'deduction', 'placeholder' => 'Deduction (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('deduction', '<span class="help-inline">:message</span>') !!}
         </div>
         <div class="form-group {{ $errors->has('tds') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>TDS Amount 10% (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('tds', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('tds', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('tds', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -148,7 +148,7 @@
         <div class="form-group {{ $errors->has('amount_on_billing') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Amount on Billing (Rs) =Total Amount - (Deduction +TDS)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('amount_on_billing', null, ['class' => 'form-control required', 'id' => 'amount_on_billing', 'placeholder' => 'Billing Amount', 'autocomplete' => 'off', 'required' => 'true']) !!}
+              {!! Form::number('amount_on_billing', null, ['class' => 'form-control required', 'id' => 'amount_on_billing', 'placeholder' => 'Billing Amount', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('amount_on_billing', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -201,8 +201,8 @@
             <label class="col-md-5 control-label"><strong>Can Be Processed ?*</strong></label>
             <div class="col-md-7">
                 <div class="toggle-radio">
-                  <input type="radio" name="processed" id="yes" checked>
-                  <input type="radio" name="processed" id="no">
+                  <input type="radio" name="can_be_processed" id="yes" value="Yes" checked>
+                  <input type="radio" name="can_be_processed" id="no" value="No">
                   <div class="switch">
                     <label for="yes">Yes</label>
                     <label for="no">No</label>
@@ -212,8 +212,6 @@
             </div>
           {!! $errors->first('remarks', '<span class="help-inline">:message</span>') !!}
         </div>
-
-
 
         <div class="form-group {{ $errors->has('remarks') ? 'has-error' : ''}} pull-right">
             <button type="submit" class="btn btn-success"><i class="fa fa-telegram" aria-hidden="true"></i> SUBMIT</button>
@@ -398,6 +396,8 @@ calculateTotal = function() {
 
   tds = parseFloat((0.1*totalBill));
 
+  tds = tds.toFixed(2);
+
   $('#tds').val(tds);
 
   $('#amount_on_billing').val(totalBill - parseInt(deduction) - tds);
@@ -425,6 +425,15 @@ $(function() {
     $('#bill_amount_from_hospital,#amount_as_per_package,#implants,#travelling_allowance,#deduction').keyup(function(){ 
       calculateTotal();
     });
+
+    $('form').on('focus', 'input[type=number]', function (e) {
+      $(this).on('mousewheel.disableScroll', function (e) {
+        e.preventDefault()
+      })
+    })
+    $('form').on('blur', 'input[type=number]', function (e) {
+      $(this).off('mousewheel.disableScroll')
+    })
 })
 </script>
 @stop
