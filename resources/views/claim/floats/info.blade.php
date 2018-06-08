@@ -7,6 +7,11 @@
   </div>
   <div class="card-body">
     <h5>Patient Info</h5>
+
+    <div class="row">
+      {{ dd($errors)}}
+    </div>
+
     <table class="table table-bordered table-condensed">
         <tr>
           <th>Patient Name</th>
