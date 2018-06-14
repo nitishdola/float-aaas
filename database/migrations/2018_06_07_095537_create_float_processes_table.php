@@ -29,6 +29,7 @@ class CreateFloatProcessesTable extends Migration
 
             $table->string('remarks', 500);
             $table->string('current_status', 50);
+            $table->string('can_be_processed',50);
             $table->boolean('status')->default(1);
             $table->timestamps();
 

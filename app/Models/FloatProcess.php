@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FloatProcess extends Model
 {
     protected $fillable = array(
-    	'float_id','invoice_from_hospital', 'amount_as_per_package', 'implants', 'travelling_allowance','total_amount', 'deduction','tds_amount','amount_on_billing','processed_by','remarks','can_be_processed'
+    	'float_id','invoice_from_hospital', 'amount_as_per_package', 'implants', 'travelling_allowance','total_amount', 'deduction','tds_amount','amount_on_billing','processed_by','remarks','can_be_processed', 'current_status'
 
     );
 	protected $table    	= 'float_processes';

@@ -13,11 +13,7 @@
     <a class="nav-link" href="#">Dashboard</a>
   </li>
   <li class="nav-item px-3">
-    <a class="nav-link" href="{{ route('admin.user.view_all') }}">Users</a>
-  </li>
-
-  <li class="nav-item px-3">
-    <a class="nav-link" href="{{ route('admin.floats.create') }}">Upload Float</a>
+    <a class="nav-link" href="{{ route('claim.float_data.view') }}">View Processed Floats</a>
   </li>
 
 </ul>

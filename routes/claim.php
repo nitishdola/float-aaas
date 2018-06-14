@@ -8,3 +8,8 @@ Route::group(['prefix' => 'claims'],function (){
 
 	 Route::post('/process-float/{float_id}', ['as' => 'floats.process', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@processFloat']);
 });
+
+
+Route::group(['prefix' => 'float-data'],function (){
+	 Route::get('/view', ['as' => 'float_data.view', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@viewAll']);
+});

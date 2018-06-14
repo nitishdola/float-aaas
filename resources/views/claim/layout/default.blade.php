@@ -13,6 +13,7 @@
     <link href="{{ asset('assets/node_modules/flag-icon-css/css/flag-icon.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/node_modules/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/node_modules/simple-line-icons/css/simple-line-icons.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zebra_datepicker/dist/css/default/zebra_datepicker.min.css">
     <!-- Main styles for this application-->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendors/pace-progress/css/pace.min.css') }}" rel="stylesheet">
@@ -75,7 +76,7 @@
     <!-- Plugins and scripts required by this view-->
     <script src="node_modules/chart.js/dist/Chart.min.js') }}"></script>
     <script src="node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js') }}"></script>
- 
+    <script src="https://cdn.jsdelivr.net/npm/zebra_datepicker/dist/zebra_datepicker.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 
     <script src="{{ asset('assets/js/main.js') }}"></script>
@@ -86,6 +87,9 @@
             "bPaginate" : false,
             "bInfo" : false
           });
+
+          $('input.zdatepicker').Zebra_DatePicker({ 'format' : 'd-m-Y'});
+
       } );
     </script>
     @yield('pageJs')

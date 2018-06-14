@@ -9,7 +9,7 @@
     <h5>Patient Info</h5>
 
     <div class="row">
-      {{ dd($errors)}}
+      
     </div>
 
     <table class="table table-bordered table-condensed">
@@ -142,12 +142,12 @@
             </div>
           {!! $errors->first('deduction', '<span class="help-inline">:message</span>') !!}
         </div>
-        <div class="form-group {{ $errors->has('tds') ? 'has-error' : ''}}">
+        <div class="form-group {{ $errors->has('tds_amount') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>TDS Amount 10% (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('tds', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('tds_amount', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
             </div>
-          {!! $errors->first('tds', '<span class="help-inline">:message</span>') !!}
+          {!! $errors->first('tds_amount', '<span class="help-inline">:message</span>') !!}
         </div>
 
         <div class="form-group {{ $errors->has('amount_on_billing') ? 'has-error' : ''}}">
@@ -175,8 +175,8 @@
               <div class="col-sm-7 col-md-7">
                 <div class="input-group">
                   <div class="btn-group radio-group">
-                     <label class="btn btn-primary not-active">Yes <input type="radio" value="Yes" name="documents_{{$v->id}}" required="required"></label>
-                     <label class="btn btn-primary not-active">No <input type="radio" value="No" name="documents_{{$v->id}}"></label>
+                     <label class="btn btn-primary not-active">Yes <input type="radio" value="1" name="documents_{{$v->id}}" required="required"></label>
+                     <label class="btn btn-primary not-active">No <input type="radio" value="0" name="documents_{{$v->id}}"></label>
                   </div>
                 </div>
               </div>
