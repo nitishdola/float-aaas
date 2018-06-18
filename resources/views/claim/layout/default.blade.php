@@ -51,7 +51,12 @@
                        </div>
                     </div>
               </div>
+
+
               @endif
+
+
+             
             
               @yield('main_content')
               <!--/.col-->

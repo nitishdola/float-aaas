@@ -122,7 +122,7 @@
       </div>
       <div class="card-body">
 
-        @foreach($float_documents as $k => $v)
+        @foreach($float_process_documents as $k => $v)
         <div class="row">
           <div class="col-md-7"><strong>{{ $v->float_requirement->name }}</strong> *</div>
           <div class="col-md-5">

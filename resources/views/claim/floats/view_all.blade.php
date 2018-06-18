@@ -97,9 +97,11 @@
           <div class="col-md-12">
             <strong>Floats</strong>
           View All
+          @if(count($results))
           <span class="pull-right">
               <a class="btn btn-xs btn-primary" href="{{ route('claim.float_data.excel_download', ['tpa_claim_reference_number' => $request->tpa_claim_reference_number, 'patient_name' => $request->patient_name, 'patient_gender' => $request->patient_gender, 'hospital_name' => $request->hospital_name, 'date_of_discharge_from' => $request->date_of_discharge_from, 'date_of_discharge_to' => $request->date_of_discharge_to, 'float_number' => $request->float_number]) }}"> Export to Excel</a>
             </span>
+            @endif
           </div>
 
         </div>
@@ -134,7 +136,10 @@
 
                     <td>{{ ucwords(str_replace('_', ' ',$v->current_status)) }}</td>
                     
-                    <td><a href="{{ route('claim.floats.view_info', Crypt::encrypt($v->id)) }}" target="_blank" class="btn btn-sm btn-primary"> View Details</a>
+                    <td><a href="{{ route('claim.float_data.info', Crypt::encrypt($v->id)) }}" target="_blank" class="btn btn-sm btn-primary"> Details</a> <br><br>
+
+                      <a href="{{ route('claim.float_data.edit', Crypt::encrypt($v->id)) }}" target="_blank" class="btn btn-sm btn-warning"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a>
+
                   </tr>
                 @endforeach
               </tbody>

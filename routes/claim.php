@@ -11,6 +11,13 @@ Route::group(['prefix' => 'claims'],function (){
 
 
 Route::group(['prefix' => 'float-data'],function (){
+
+	Route::get('/view-info/{float_id}', ['as' => 'float_data.info', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@viewDetailedInfo']);
+
+	Route::get('/{float_id}/edit', ['as' => 'float_data.edit', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@edit']);
+
+	Route::get('/{float_id}/view-info', ['as' => 'float_data.update', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@update']);
+
 	 Route::get('/view', ['as' => 'float_data.view', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@viewAll']);
 
 	 Route::get('/download-excel', ['as' => 'float_data.excel_download', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@excelExport']);

@@ -10,12 +10,12 @@ class FloatProcessDocument extends Model
     	'float_process_id','float_requirement_id', 'float_requirement_value',
 
     );
-	protected $table    	= 'float_process_documents';
+	   protected $table    	= 'float_process_documents';
     protected $guarded   	= ['_token'];
     public static $rules 	= [
-    	'float_process_id' 		=> 'required|exists:float_processes,id',
-    	'float_requirement_id' 	=> 'required|exists:float_requirements,id',
-    	'float_requirement_value' => 'required',
+    	'float_process_id' 		     => 'required|exists:float_processes,id',
+    	'float_requirement_id' 	   => 'required|exists:float_requirements,id',
+    	'float_requirement_value'  => 'required',
 	];
 
 	public function float_process()

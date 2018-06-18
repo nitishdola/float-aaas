@@ -20,14 +20,13 @@ class FloatController extends Controller
     	$float_id = Crypt::decrypt($float_id);
 
     	$float = ClaimFloat::whereId($float_id)->with('beneficiary_district')->first();
-        $float_process = FloatProcess::where('float_id', $float_id)->where('status',1)->first();
 
-        $float_documents = FloatProcessDocument::where('float_process_id', $float_process->id)->with('float_requirement')->get();
-
-    	return view('claim.floats.info', compact('float', 'float_process', 'float_documents'));
+    	return view('claim.floats.view', compact('float'));
     } 
 
     public function processFloat(Request $request, $float_id = null) {
+
+        //DB::beginTransaction();
 
     	$data = $request->all();
     	$data['processed_by'] 	= Auth::user()->id;
@@ -35,6 +34,11 @@ class FloatController extends Controller
     	$data['current_status'] = 'float_processed_by_claims_coordinator';
 
       	$validator = Validator::make($data, FloatProcess::$rules);
+
+        if ($validator->fails())
+                        {
+                            dd($validator); //This Is works
+                        }
         if ($validator->fails()) return Redirect::back()->withErrors($validator)->withInput();
 
         if($float_process = FloatProcess::create($data)) {
@@ -62,7 +66,12 @@ class FloatController extends Controller
 	    				$float_process_document['float_requirement_value'] 	= $request->$doc_var;
 
 	    				$validator_doc = Validator::make($float_process_document, FloatProcessDocument::$rules);
-        				if ($validator_doc->fails()) return Redirect::back()->withErrors($validator_doc)->withInput();
+        				/*if ($validator_doc->fails()) return Redirect::back()->withErrors($validator_doc)->withInput();*/
+
+                        if ($validator_doc->fails())
+                        {
+                            dd($validator_doc->errors); //This Is works
+                        }
 
 	    				FloatProcessDocument::create($float_process_document);
 	    			}
@@ -70,19 +79,21 @@ class FloatController extends Controller
 	    	}
         }
 
-    	
-
-    	dd($request->all());
+       // DB::commit();
     }
 
-    public function viewDetails($float_process_id = null) {
-    	$float_process_id 	= Crypt::decrypt($float_process_id);
+    public function viewDetailedInfo($float_id = null) {
+    	
 
-    	$float_process 		= FloatProcess::whereId($float_process_id)->with('float')->first();
+        $float_id = Crypt::decrypt($float_id);
 
-    	$float_process_documents = FloatProcessDocument::where('float_process_id', $float_process_id)->with('float_requirement')->get();
+        $float = ClaimFloat::whereId($float_id)->with('beneficiary_district')->first();
 
-    	return view('claim.floats.view_details', compact('float_process', 'float_process_documents'));
+        $float_process      = FloatProcess::where('float_id', $float_id)->with('float')->first();
+
+    	$float_process_documents = FloatProcessDocument::where('float_process_id', $float_process->id)->with('float_requirement')->get();
+
+    	return view('claim.floats.info', compact('float', 'float_process', 'float_process_documents'));
     }
 
     public function viewAll(Request $request) {
@@ -105,7 +116,7 @@ class FloatController extends Controller
             $arr[$k]['Package Name']            = $v->package_name;
 
             $float_process = FloatProcess::where('float_id', $v->id)->where('status',1)->first();
-            dd($v->id);
+       
             $arr[$k]['Invoice/ Bills from Hopsital (Rs)']      = $float_process->invoice_from_hospital;
 
             $arr[$k]['Amount as per Package rate (Rs)']         = $float_process->amount_as_per_package;
@@ -117,7 +128,7 @@ class FloatController extends Controller
             $arr[$k]['Deduction (Rs)']                = $float_process->deduction;
             $arr[$k]['TDS Amount 10% (Rs)']           = $float_process->tds_amount;
             $arr[$k]['Amount on Billing (Rs) =Total Amount - (Deduction +TDS)']           = $float_process->amount_on_billing;
-            $arr[$k]['Status']           = $float_process->remarks;
+            $arr[$k]['Status']           = html_entity_decode($float_process->remarks);
             
             
         }
@@ -137,8 +148,8 @@ class FloatController extends Controller
 
     public function getSearchResult($request) {
         $where = [];
-        //$where['processed']     = 1;
-        //$where['assigned_to']   = Auth::user()->id;
+        $where['processed']     = 1;
+        $where['assigned_to']   = Auth::user()->id;
 
         if($request->tpa_claim_reference_number) {
             $where['tpa_claim_reference_number'] = strtoupper($request->tpa_claim_reference_number);
@@ -171,5 +182,9 @@ class FloatController extends Controller
         }
  
         return $result_data;
+    }
+
+    public function edit($float_process_id) {
+        
     }
 }
