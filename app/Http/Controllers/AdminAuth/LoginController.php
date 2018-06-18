@@ -7,6 +7,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Hesto\MultiAuth\Traits\LogsoutGuard;
 
+use Illuminate\Http\Request;
+use DB, Validator, Redirect, Crypt,Input;
+
 class LoginController extends Controller
 {
     /*
@@ -49,6 +52,24 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('admin.auth.login');
+    }
+
+    /**
+    * Process the admin login attempt
+    */
+    public function adminLoginPost(Request $request)
+    {
+        
+        $this->validate($request, [
+            'username'      => 'required',
+            'password'      => 'required',
+        ]);
+        if (auth()->guard('admin')->attempt(['username' => $request->input('username'), 'password' => $request->input('password')]))
+        {
+            return redirect('/admin/home');
+        }else{
+            return redirect('/admin/login')->with('message', 'Invalid credentials');
+        }
     }
 
     /**

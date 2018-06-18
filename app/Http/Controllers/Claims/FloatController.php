@@ -20,8 +20,11 @@ class FloatController extends Controller
     	$float_id = Crypt::decrypt($float_id);
 
     	$float = ClaimFloat::whereId($float_id)->with('beneficiary_district')->first();
+        $float_process = FloatProcess::where('float_id', $float_id)->where('status',1)->first();
 
-    	return view('claim.floats.info', compact('float'));
+        $float_documents = FloatProcessDocument::where('float_process_id', $float_process->id)->with('float_requirement')->get();
+
+    	return view('claim.floats.info', compact('float', 'float_process', 'float_documents'));
     } 
 
     public function processFloat(Request $request, $float_id = null) {
@@ -83,16 +86,70 @@ class FloatController extends Controller
     }
 
     public function viewAll(Request $request) {
+        $result_data = $this->getSearchResult($request);
+        $results = $result_data->paginate(600);
+        return view('claim.floats.view_all', compact('results', 'request'));
+    }
+
+    public function excelExport(Request $request) {
+        $result_data = $this->getSearchResult($request);
+        $results = $result_data->get();
+
+
+
+        $arr = [];
+        foreach($results as $k => $v) {
+            $arr[$k]['Sl No']                   = $k+1;
+            $arr[$k]['Date of Admission']       = $v->date_of_admission;
+            $arr[$k]['Date of Discharge']       = $v->date_of_discharge;
+            $arr[$k]['Package Name']            = $v->package_name;
+
+            $float_process = FloatProcess::where('float_id', $v->id)->where('status',1)->first();
+            dd($v->id);
+            $arr[$k]['Invoice/ Bills from Hopsital (Rs)']      = $float_process->invoice_from_hospital;
+
+            $arr[$k]['Amount as per Package rate (Rs)']         = $float_process->amount_as_per_package;
+
+            $arr[$k]['Implants/Stents (Rs)']                    = $float_process->implants;
+
+            $arr[$k]['Traveling Allowance (Rs)']                = $float_process->travelling_allowance;
+            $arr[$k]['Total Amount=(Package rate +Implants/stents + TA) (Rs)']                = $float_process->total_amount;
+            $arr[$k]['Deduction (Rs)']                = $float_process->deduction;
+            $arr[$k]['TDS Amount 10% (Rs)']           = $float_process->tds_amount;
+            $arr[$k]['Amount on Billing (Rs) =Total Amount - (Deduction +TDS)']           = $float_process->amount_on_billing;
+            $arr[$k]['Status']           = $float_process->remarks;
+            
+            
+        }
+        Excel::create('Float-Processed', function( $excel) use($arr){
+            $excel->sheet('Float-Processed', function($sheet) use($arr){
+              $sheet->setTitle('Float-Processed');
+
+              $sheet->cells('A1:M1', function($cells) {
+                $cells->setFontWeight('bold');
+              });
+              
+              
+              $sheet->fromArray($arr, null, 'A1', false, true);
+            });
+        })->download('xlsx');
+    }
+
+    public function getSearchResult($request) {
         $where = [];
-        /*$where['processed']     = 1;
-        $where['assigned_to']   = Auth::user()->id;*/
+        //$where['processed']     = 1;
+        //$where['assigned_to']   = Auth::user()->id;
 
         if($request->tpa_claim_reference_number) {
             $where['tpa_claim_reference_number'] = strtoupper($request->tpa_claim_reference_number);
         }
 
         if($request->patient_gender) {
-            $where['patient_gender'] = strtoupper($request->patient_gender);
+            $where['patient_gender']    = strtoupper($request->patient_gender);
+        }
+
+        if($request->float_number) {
+            $where['float_number']      = $request->float_number;
         }
 
         $result_data = ClaimFloat::where($where)->whereStatus(1)->orderBy('patient_name')->with(['claims_coordinator', 'beneficiary_district']);
@@ -113,7 +170,6 @@ class FloatController extends Controller
             $result_data = $result_data->where('date_of_discharge', '<=', date('Y-m-d', strtotime( $request->date_of_discharge_to ) ));
         }
  
-        $results = $result_data->paginate(600);
-        return view('claim.floats.view_all', compact('results', 'request'));
+        return $result_data;
     }
 }

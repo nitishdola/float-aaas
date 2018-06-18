@@ -16,6 +16,7 @@ class UpdateFloatsTable extends Migration
         Schema::table('floats', function (Blueprint $table) {
             $table->integer('assigned_to', false, true)->after('utr_date')->nullable();
             $table->string('current_status', 127)->after('assigned_to')->default('float_uploaded');
+            $table->boolean('processed')->default(0);
             $table->boolean('status')->after('current_status')->default(1);
         });
     }

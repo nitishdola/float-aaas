@@ -12,4 +12,6 @@ Route::group(['prefix' => 'claims'],function (){
 
 Route::group(['prefix' => 'float-data'],function (){
 	 Route::get('/view', ['as' => 'float_data.view', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@viewAll']);
+
+	 Route::get('/download-excel', ['as' => 'float_data.excel_download', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@excelExport']);
 });

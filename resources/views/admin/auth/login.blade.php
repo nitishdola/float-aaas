@@ -24,12 +24,6 @@
         @endif
     </div>
     
-    <!-- <div class="form-group clearfix">
-        <label class="fancy-checkbox element-left">
-            <input type="checkbox">
-            <span>Remember me</span>
-        </label>
-    </div> -->
     <button type="submit" class="btn btn-primary btn-lg btn-block" name="S1" value="Login">LOGIN</button>
     <div class="bottom">
         @if(Session::has('message'))
