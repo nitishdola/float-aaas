@@ -71,14 +71,16 @@
 </div>
 
 <div class="col-md-12">
-    <a href="http://aaa-assam.in/FOLLOWUP/SEARCHPATIANTREGISTATION.ASPX?ROLE=IC&STATUS=179" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-search" aria-hidden="true"></i> Search Patient Data</a>
-    <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a> 
+  <a href="http://aaa-assam.in/FOLLOWUP/SEARCHPATIANTREGISTATION.ASPX?ROLE=IC&STATUS=179" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-search" aria-hidden="true"></i> Search Patient Data</a>
+  <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a> 
 </div>
 
-{!! Form::open(array('route' => ['claim.floats.process', $float->id], 'id' => 'floats.process', 'class' => '')) !!}
+{!! Form::open(array('route' => ['claim.floats.process', $float->id], 'id' => 'floats.process', 'class' => '', 'onsubmit' => 'return confirm("Are you sure?")' )) !!}
+
+
 <div class="row">
   <div class="col-sm-4">
-    <div class="card">
+    <div class="card" id="billing_card">
       <div class="card-header">
         Billing
       </div>
@@ -86,7 +88,7 @@
         <div class="form-group {{ $errors->has('invoice_from_hospital') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Invoice/Bills From Hospital(Rs.)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('invoice_from_hospital', null, ['class' => 'form-control required', 'id' => 'bill_amount_from_hospital', 'placeholder' => 'Invoice/Bills From Hospital(Rs.)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('invoice_from_hospital', null, ['class' => 'form-control required', 'id' => 'bill_amount_from_hospital', 'placeholder' => 'Invoice/Bills From Hospital(Rs.)', 'autocomplete' => 'off', 'step' => '0.01', 'data-validation' => 'length alphanumeric']) !!}
             </div>
           {!! $errors->first('invoice_from_hospital', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -229,8 +231,6 @@
 
 @section('pageCss')
 
-<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
-
 <style type="text/css">
 .radio-group label {
    overflow: hidden;
@@ -337,10 +337,13 @@ label:focus,
 @stop
 
 @section('pageJs')
-
-<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script>
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script> 
 <script>
+
+  $.validate({
+    lang: 'es'
+  });
+
 copyCCN = function() {
   /* Get the text field */
   var copyText = $('#ccn_no');
@@ -351,12 +354,54 @@ copyCCN = function() {
   /* Alert the copied text */
   alert("Copied the text: " + copyText.val());
 }
+
+bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
+amount_as_per_package     = $('#amount_as_per_package').val();
+implants                  = $('#implants').val();
+travelling_allowance      = $('#travelling_allowance').val();
+deduction = $('#deduction').val();
+
+
+validateFloatForm = function() {
+  if(bill_amount_from_hospital == '') {
+    alert('Bill amount from hospital is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#bill_amount_from_hospital').focus();
+    return false;
+  }
+
+  if(amount_as_per_package == '') {
+    alert('Amount as per package is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#amount_as_per_package').focus();
+    return false;
+  }
+
+  if(implants == '') {
+    alert('Implants is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#implants').focus();
+    return false;
+  }
+
+  if(travelling_allowance == '') {
+    alert('Travel Allowance is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#travelling_allowance').focus();
+    return false;
+  }
+
+  if(deduction == '') {
+    alert('Deduction is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#deduction').focus();
+    return false;
+  }
+  
+}
+
 calculateTotal = function() {
-  bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
-  amount_as_per_package     = $('#amount_as_per_package').val();
-  implants                  = $('#implants').val();
-  travelling_allowance      = $('#travelling_allowance').val();
-  deduction = $('#deduction').val();
+  
   if(bill_amount_from_hospital == '') {
     bill_amount_from_hospital = 0;
   }
@@ -372,7 +417,7 @@ calculateTotal = function() {
   if(deduction == '') {
     deduction = 0;
   }
-  var totalBill = parseInt(bill_amount_from_hospital)+parseInt(implants)+parseInt(travelling_allowance);
+  var totalBill = parseInt(amount_as_per_package)+parseInt(implants)+parseInt(travelling_allowance);
   $('#total').val(totalBill);
   tds = parseFloat((0.1*totalBill));
   tds = tds.toFixed(2);
@@ -395,7 +440,7 @@ $(function() {
         }
       }
     });
-    $('#bill_amount_from_hospital,#amount_as_per_package,#implants,#travelling_allowance,#deduction').keyup(function(){ 
+    $('#amount_as_per_package,#implants,#travelling_allowance,#deduction').keyup(function(){ 
       calculateTotal();
     });
     $('form').on('focus', 'input[type=number]', function (e) {
@@ -407,5 +452,7 @@ $(function() {
       $(this).off('mousewheel.disableScroll')
     })
 })
+
+
 </script>
 @stop
