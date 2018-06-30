@@ -79,8 +79,8 @@
     <script src="{{ asset('assets/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/node_modules/@coreui/coreui/dist/js/coreui.min.js') }}"></script>
     <!-- Plugins and scripts required by this view-->
-    <script src="node_modules/chart.js/dist/Chart.min.js') }}"></script>
-    <script src="node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js') }}"></script>
+    <script src="{{ asset('assets/node_modules/chart.js/dist/Chart.min.js') }}"></script>
+    <script src="{{ asset('assets/node_modules/@coreui/coreui-plugin-chartjs-custom-tooltips/dist/js/custom-tooltips.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/zebra_datepicker/dist/zebra_datepicker.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 

@@ -28,10 +28,10 @@
         </tr>
 
         <tr>
-          <th width="13%">Date of Admission</th>
+          <th>Date of Admission</th>
           <td>{{ date('d-m-Y', strtotime($float->date_of_admission)) }}</td>
 
-          <th width="13%">Date of Discharge</th>
+          <th>Date of Discharge</th>
           <td>{{ date('d-m-Y', strtotime($float->date_of_discharge)) }}</td>                
 
           <th>Claim Amount</th>
@@ -75,7 +75,7 @@
   <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a> 
 </div>
 
-{!! Form::open(array('route' => ['claim.floats.process', $float->id], 'id' => 'floats.process', 'class' => '', 'onsubmit' => 'return confirm("Are you sure?")' )) !!}
+{!! Form::open(array('route' => ['claim.floats.process', $float->id], 'id' => 'floats.process', 'class' => '', 'onsubmit' => 'return validateFloatForm()' )) !!}
 
 
 <div class="row">
@@ -95,14 +95,14 @@
         <div class="form-group {{ $errors->has('amount_as_per_package') ? 'has-error' : ''}}" >
           <label class="col-md-12 control-label"><strong>Amount as per Package Rate (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('amount_as_per_package', null, ['class' => 'form-control required', 'id' => 'amount_as_per_package', 'placeholder' => 'Amount as per Package Rate (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('amount_as_per_package', null, ['class' => 'form-control required', 'id' => 'amount_as_per_package', 'placeholder' => 'Amount as per Package Rate (Rs)', 'autocomplete' => 'off', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('amount_as_per_package', '<span class="help-inline">:message</span>') !!}
         </div>
         <div class="form-group {{ $errors->has('implants') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Implants/Stents (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('implants', null, ['class' => 'form-control required', 'id' => 'implants', 'placeholder' => 'Implants/Stents (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('implants', null, ['class' => 'form-control required', 'id' => 'implants', 'placeholder' => 'Implants/Stents (Rs)', 'autocomplete' => 'off', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('implants', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -110,7 +110,7 @@
         <div class="form-group {{ $errors->has('travelling_allowance') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Travelling Allowance (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('travelling_allowance', null, ['class' => 'form-control required', 'id' => 'travelling_allowance', 'placeholder' => 'Travelling Allowance (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('travelling_allowance', null, ['class' => 'form-control required', 'id' => 'travelling_allowance', 'placeholder' => 'Travelling Allowance (Rs)', 'autocomplete' => 'off', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('travelling_allowance', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -127,7 +127,7 @@
          <div class="form-group {{ $errors->has('total') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Total Amount=(Package rate +Implants/stents + TA) (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('total_amount', null, ['class' => 'form-control required', 'id' => 'total', 'placeholder' => 'Total Amount(Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('total_amount', null, ['class' => 'form-control required', 'id' => 'total', 'placeholder' => 'Total Amount(Rs)', 'autocomplete' => 'off', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('total', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -135,14 +135,14 @@
         <div class="form-group {{ $errors->has('deduction') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Deduction (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('deduction', null, ['class' => 'form-control required', 'id' => 'deduction', 'placeholder' => 'Deduction (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('deduction', null, ['class' => 'form-control required', 'id' => 'deduction', 'placeholder' => 'Deduction (Rs)', 'autocomplete' => 'off', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('deduction', '<span class="help-inline">:message</span>') !!}
         </div>
         <div class="form-group {{ $errors->has('tds_amount') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>TDS Amount 10% (Rs)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('tds_amount', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('tds_amount', null, ['class' => 'form-control required', 'id' => 'tds', 'placeholder' => 'TDS Amount (Rs)', 'autocomplete' => 'off','step' => '0.01']) !!}
             </div>
           {!! $errors->first('tds_amount', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -150,7 +150,7 @@
         <div class="form-group {{ $errors->has('amount_on_billing') ? 'has-error' : ''}}">
           <label class="col-md-12 control-label"><strong>Amount on Billing (Rs) =Total Amount - (Deduction +TDS)*</strong></label>
             <div class="col-md-12">
-              {!! Form::number('amount_on_billing', null, ['class' => 'form-control required', 'id' => 'amount_on_billing', 'placeholder' => 'Billing Amount', 'autocomplete' => 'off', 'required' => 'true', 'step' => '0.01']) !!}
+              {!! Form::number('amount_on_billing', null, ['class' => 'form-control required', 'id' => 'amount_on_billing', 'placeholder' => 'Billing Amount', 'autocomplete' => 'off', 'step' => '0.01']) !!}
             </div>
           {!! $errors->first('amount_on_billing', '<span class="help-inline">:message</span>') !!}
         </div>
@@ -172,8 +172,8 @@
               <div class="col-sm-7 col-md-7">
                 <div class="input-group">
                   <div class="btn-group radio-group">
-                     <label class="btn btn-primary not-active">Yes <input type="radio" value="1" name="documents_{{$v->id}}" required="required"></label>
-                     <label class="btn btn-primary not-active">No <input type="radio" value="0" name="documents_{{$v->id}}"></label>
+                     <label class="btn btn-primary not-active">Yes <input class="claim-req" type="radio" value="1" name="documents_{{$v->id}}"></label>
+                     <label class="btn btn-primary not-active">No <input class="claim-req" type="radio" value="0" name="documents_{{$v->id}}"></label>
                   </div>
                 </div>
               </div>
@@ -185,7 +185,7 @@
     </div>
   </div>
 
-  <div class="col-sm-12">
+  <div class="col-sm-12" id="reamrksSect">
     <div class="card">
       <div class="card-header">
         Remarks
@@ -193,18 +193,18 @@
       <div class="card-body">
          <div class="form-group {{ $errors->has('remarks') ? 'has-error' : ''}}">
             <div class="col-md-12">
-              {!! Form::textarea('remarks', null, ['class' => 'form-control required', 'id' => 'remarks', 'placeholder' => 'Remarks', 'rows' => 4, 'required' => 'true']) !!}
+              {!! Form::textarea('remarks', null, ['class' => 'form-control required', 'id' => 'remarks', 'placeholder' => 'Remarks', 'rows' => 4]) !!}
             </div>
           {!! $errors->first('remarks', '<span class="help-inline">:message</span>') !!}
         </div>
 
 
-        <div class="form-group" style="margin-top:100px;">
+        <div class="form-group" style="margin-top:100px;" id="canBePro"> 
             <label class="col-md-5 control-label"><strong>Can Be Processed ?*</strong></label>
             <div class="col-md-7">
                 <div class="toggle-radio">
-                  <input type="radio" name="can_be_processed" id="yes" value="Yes" checked>
-                  <input type="radio" name="can_be_processed" id="no" value="No">
+                  <input type="radio" class="can-be-pro" name="can_be_processed" id="yes" value="Yes" checked>
+                  <input type="radio" class="can-be-pro" name="can_be_processed" id="no" value="No">
                   <div class="switch">
                     <label for="yes">Yes</label>
                     <label for="no">No</label>
@@ -212,10 +212,10 @@
                   </div>
                 </div>
             </div>
-          {!! $errors->first('remarks', '<span class="help-inline">:message</span>') !!}
+          {!! $errors->first('can_be_processed', '<span class="help-inline">:message</span>') !!}
         </div>
 
-        <div class="form-group {{ $errors->has('remarks') ? 'has-error' : ''}} pull-right">
+        <div class="form-group pull-right">
             <button type="submit" class="btn btn-success"><i class="fa fa-telegram" aria-hidden="true"></i> SUBMIT</button>
         </div>
       </div>
@@ -337,12 +337,9 @@ label:focus,
 @stop
 
 @section('pageJs')
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script> 
+
 <script>
 
-  $.validate({
-    lang: 'es'
-  });
 
 copyCCN = function() {
   /* Get the text field */
@@ -355,16 +352,28 @@ copyCCN = function() {
   alert("Copied the text: " + copyText.val());
 }
 
-bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
-amount_as_per_package     = $('#amount_as_per_package').val();
-implants                  = $('#implants').val();
-travelling_allowance      = $('#travelling_allowance').val();
-deduction = $('#deduction').val();
-
-
 validateFloatForm = function() {
+
+
+  bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
+  amount_as_per_package     = $('#amount_as_per_package').val();
+  implants                  = $('#implants').val();
+  travelling_allowance      = $('#travelling_allowance').val();
+  deduction                 = $('#deduction').val();
+
+  total_amount              = $('#total_amount').val();
+  tds_amount                = $('#tds_amount').val();
+  amount_on_billing         = $('#amount_on_billing').val();
+
+  remarks                   = $('#remarks').val();
+
+  claimRequirementRadios    = $(':radio[class="claim-req"]:checked').length;
+
+  canBeProcessed            = $(':radio[class="can-be-pro"]:checked').length;
+
+
   if(bill_amount_from_hospital == '') {
-    alert('Bill amount from hospital is missing !');
+    alert('Bill amount from hospital is missing !'+bill_amount_from_hospital);
     $(window).scrollTop($('#billing_card').offset().top);
     $('#bill_amount_from_hospital').focus();
     return false;
@@ -397,11 +406,68 @@ validateFloatForm = function() {
     $('#deduction').focus();
     return false;
   }
+
+  if(total_amount == '') {
+    alert('Total Amount is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#total_amount').focus();
+    return false;
+  }
+
+
+  if(tds_amount == '') {
+    alert('TDS Amount is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#tds_amount').focus();
+    return false;
+  }
+
+
+  if(amount_on_billing == '') {
+    alert('Amount on Billing is missing !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    $('#amount_on_billing').focus();
+    return false;
+  }
+
+
+  if(remarks == '') {
+    alert('Remarks is missing !');
+    $(window).scrollTop($('#reamrksSect').offset().top);
+    $('#remarks').focus();
+    return false;
+  }
+
+  if(claimRequirementRadios != {{ count( Helper::claimRequirements() ) }} ) {
+    alert('All documents selection is mendatory !');
+    $(window).scrollTop($('#billing_card').offset().top);
+    return false;
+  }
+
+  if(canBeProcessed != 1) {
+    alert('Please select if claim can be processed or not !');
+    $(window).scrollTop($('#canBePro').offset().top);
+    return false;
+  }
+
+
+  return true;
   
 }
 
 calculateTotal = function() {
   
+
+  bill_amount_from_hospital = $('#bill_amount_from_hospital').val();
+  amount_as_per_package     = $('#amount_as_per_package').val();
+  implants                  = $('#implants').val();
+  travelling_allowance      = $('#travelling_allowance').val();
+  deduction                 = $('#deduction').val();
+
+  total_amount              = $('#total_amount').val();
+  tds_amount                = $('#tds_amount').val();
+  amount_on_billing         = $('#amount_on_billing').val();
+
   if(bill_amount_from_hospital == '') {
     bill_amount_from_hospital = 0;
   }

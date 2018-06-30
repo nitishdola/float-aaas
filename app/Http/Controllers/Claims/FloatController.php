@@ -26,7 +26,7 @@ class FloatController extends Controller
 
     public function processFloat(Request $request, $float_id = null) {
 
-        //DB::beginTransaction();
+        DB::beginTransaction();
 
     	$data = $request->all();
     	$data['processed_by'] 	= Auth::user()->id;
@@ -66,12 +66,7 @@ class FloatController extends Controller
 	    				$float_process_document['float_requirement_value'] 	= $request->$doc_var;
 
 	    				$validator_doc = Validator::make($float_process_document, FloatProcessDocument::$rules);
-        				/*if ($validator_doc->fails()) return Redirect::back()->withErrors($validator_doc)->withInput();*/
-
-                        if ($validator_doc->fails())
-                        {
-                            dd($validator_doc->errors); //This Is works
-                        }
+        				if ($validator_doc->fails()) return Redirect::back()->withErrors($validator_doc)->withInput();
 
 	    				FloatProcessDocument::create($float_process_document);
 	    			}
@@ -79,7 +74,10 @@ class FloatController extends Controller
 	    	}
         }
 
-       // DB::commit();
+        DB::commit();
+
+
+        //proceed to next float
     }
 
     public function viewDetailedInfo($float_id = null) {
