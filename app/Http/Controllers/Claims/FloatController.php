@@ -182,7 +182,20 @@ class FloatController extends Controller
         return $result_data;
     }
 
-    public function edit($float_process_id) {
-        
+    public function edit($float_id) {
+        $float_id   = Crypt::decrypt($float_id);
+
+        $float      = ClaimFloat::find($float_id);
+
+
+        $float_process      = FloatProcess::where('float_id', $float_id)->first();
+
+        $float_documents    = FloatProcessDocument::where('float_process_id', $float_process->id)->with('float_requirement')->get();
+
+        return view('claim.floats.edit', compact('float', 'float_process', 'float_documents'));  
+    }
+
+    public function update(Request $request, $float_id) {
+        dd($request);
     }
 }

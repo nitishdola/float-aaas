@@ -16,7 +16,7 @@ Route::group(['prefix' => 'float-data'],function (){
 
 	Route::get('/{float_id}/edit', ['as' => 'float_data.edit', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@edit']);
 
-	Route::get('/{float_id}/view-info', ['as' => 'float_data.update', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@update']);
+	Route::post('/{float_id}/view-info', ['as' => 'float_data.update', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@update']);
 
 	 Route::get('/view', ['as' => 'float_data.view', 'middleware' => ['claim'], 'uses' => 'Claims\FloatController@viewAll']);
 
