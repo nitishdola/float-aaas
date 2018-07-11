@@ -1,5 +1,5 @@
 <?php
-
+header('Access-Control-Allow-Origin: *');
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -51,5 +51,7 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+$app->register('Nord\Lumen\Cors\CorsServiceProvider');
+
 
 return $app;

@@ -25,7 +25,7 @@ class FloatController extends Controller
     } 
 
     public function processFloat(Request $request, $float_id = null) {
-
+        dd($request);
         DB::beginTransaction();
 
     	$data = $request->all();
