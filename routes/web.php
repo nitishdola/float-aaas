@@ -88,3 +88,6 @@ Route::group(['prefix' => 'account'], function () {
   Route::get('/password/reset', 'AccountAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'AccountAuth\ResetPasswordController@showResetForm');
 });
+
+
+Route::get('/get-patient-data', 'REST\APIController@getData')->name('api_get_data');

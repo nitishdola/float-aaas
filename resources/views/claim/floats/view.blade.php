@@ -10,7 +10,7 @@
     <table class="table table-bordered table-condensed">
         <tr>
           <th>Patient Name</th>
-          <td>{{ $float->patient_name }}</td>
+          <td id="pname">{{ $float->patient_name }}</td>
 
           <th>CCN Number</th>
           <td><input id="ccn_no" class="form-control" readonly="readonly" value="{{ $float->tpa_claim_reference_number }}">
@@ -248,13 +248,45 @@
 </div>
 
 {!! Form::close() !!}
-      
+ 
+
+
+<div id="patientModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+            </div>
+            <div class="modal-body">
+              <p class="col-sm-12">
+                Patient Name in Dashboard : <span id="dashboardPatientName"></span>
+              </p>
+
+              <p class="col-sm-12">
+                Patient Name in Float  : <span id="floatPatientName"></span>
+              </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="loadpage" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
 @endsection
 
 
 
 @section('pageCss')
 <style type="text/css">
+
 
 .custom-radios div {
   display: inline-block;
@@ -330,9 +362,9 @@
 
 @section('pageJs')
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
+
 <script>
-
-
 copyCCN = function() {
   /* Get the text field */
   var copyText = $('#ccn_no');
@@ -457,18 +489,49 @@ showPatientInfo = function(ccn_number) {
 
   data += '&ccn='+ccn_number;
 
-  url  += 'http://mdiaaasnc.mdindia.com:8088/api/aaasnc/GetCCNData';
+  url  += "{{ route('api_get_data') }}";
 
+  $.blockUI();
   $.ajax({
     url : url,
     type : 'get',
     data : data,
-
-    error : function(resp) {
+    error : function(resp) { 
+      $.unblockUI();
       console.log(resp);
     },
 
     success : function(resp) {
+      $.unblockUI();
+
+      /*$.each(resp, function (key, val) {
+        $('#dashboardPatientName').text('');
+        $('#dashboardPatientName').text(val.patient_name+$('#pname').text());
+
+
+        $('#floatPatientName').text('');
+        $('#floatPatientName').text($('#pname').text());
+
+
+
+        $('#patientModal').modal('show')
+      });*/
+
+
+
+      alert(resp.patient_name);
+
+      $('#dashboardPatientName').text('');
+      $('#dashboardPatientName').text(resp.patient_name+$('#pname').text());
+
+
+      $('#floatPatientName').text('');
+      $('#floatPatientName').text($('#pname').text());
+
+
+
+      $('#patientModal').modal('show')
+      
       console.log(resp);
     }
   });
