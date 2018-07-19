@@ -26,7 +26,9 @@ class CreateFloatsTable extends Migration
 
             $table->float('patient_age', 10,2);
             $table->string('patient_gender', 30);
-            $table->string('hospital_name', 255);
+            //$table->string('hospital_name', 255);
+
+            $table->integer('hospital_id', false, true);
 
             $table->string('hospital_type', 255);  
             $table->date('date_of_admission');    
@@ -34,7 +36,9 @@ class CreateFloatsTable extends Migration
 
             $table->string('package_code', 127);  
             $table->string('package_name', 600);  
-            $table->string('diagnosis', 255);  
+            //$table->string('diagnosis', 255);  
+
+            $table->integer('diagnosis_id', false, true);  
 
             $table->decimal('claim_amount_base', 20,2);  
             $table->decimal('approved_amount_base', 20,2);  
@@ -62,7 +66,10 @@ class CreateFloatsTable extends Migration
 
 
             $table->integer('claim_id', false, true);
-            $table->string('float_number', 10);
+            //$table->string('float_number', 10);
+            
+            $table->integer('float_id', false, true);
+
             $table->decimal('net_payable', 10,2);
 
             $table->date('float_generated_date');
