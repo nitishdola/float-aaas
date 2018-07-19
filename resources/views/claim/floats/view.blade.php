@@ -24,7 +24,7 @@
           <td>{{ $float->patient_gender }}</td>
 
           <th>URN</th>
-          <td>{{ $float->enr_urn }}</td>
+          <td><span id="urn"> {{ $float->enr_urn }}</span></td>
         </tr>
 
         <tr>
@@ -267,10 +267,29 @@
                 Patient Name in Float  : <span id="floatPatientName"></span>
               </p>
 
+              <hr>
+
+              <p class="col-sm-12">
+                CCN in Dashboard : <span id="dashboardCCN"></span>
+              </p>
+
+              <p class="col-sm-12">
+                CCN in Float  : <span id="floatCCN"></span>
+              </p>
+
+              <hr>
+
+              <p class="col-sm-12">
+                URN in Dashboard : <span id="dashboardURN"></span>
+              </p>
+
+              <p class="col-sm-12">
+                URN in Float  : <span id="floatURN"></span>
+              </p>
+
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="loadpage" type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -496,43 +515,39 @@ showPatientInfo = function(ccn_number) {
     url : url,
     type : 'get',
     data : data,
+    dataType : 'json',
     error : function(resp) { 
       $.unblockUI();
-      console.log(resp);
+      //console.log(resp);
     },
 
     success : function(resp) {
       $.unblockUI();
 
-      /*$.each(resp, function (key, val) {
-        $('#dashboardPatientName').text('');
-        $('#dashboardPatientName').text(val.patient_name+$('#pname').text());
-
-
-        $('#floatPatientName').text('');
-        $('#floatPatientName').text($('#pname').text());
-
-
-
-        $('#patientModal').modal('show')
-      });*/
-
-
-
-      alert(resp.patient_name);
-
       $('#dashboardPatientName').text('');
-      $('#dashboardPatientName').text(resp.patient_name+$('#pname').text());
-
+      $('#dashboardPatientName').text(resp.patient_name);
 
       $('#floatPatientName').text('');
       $('#floatPatientName').text($('#pname').text());
 
+      //URN//
+      $('#dashboardURN').text('');
+      $('#dashboardURN').text(resp.urn);
 
+      $('#floatURN').text('');
+      $('#floatURN').text($('#urn').text());
+
+      //CCN
+      $('#dashboardCCN').text('');
+      $('#dashboardCCN').text(resp.ccn);
+
+      $('#floatCCN').text('');
+      $('#floatCCN').text($('#ccn_no').val());
+
+      console.log(resp);
 
       $('#patientModal').modal('show')
       
-      console.log(resp);
     }
   });
 }

@@ -10,7 +10,7 @@
     <table class="table table-bordered table-condensed">
         <tr>
           <th>Patient Name</th>
-          <td>{{ $float->patient_name }}</td>
+          <td id="pname">{{ $float->patient_name }}</td>
 
           <th>CCN Number</th>
           <td><input id="ccn_no" class="form-control" readonly="readonly" value="{{ $float->tpa_claim_reference_number }}">
@@ -24,7 +24,7 @@
           <td>{{ $float->patient_gender }}</td>
 
           <th>URN</th>
-          <td>{{ $float->enr_urn }}</td>
+          <td><span id="urn"> {{ $float->enr_urn }}</span></td>
         </tr>
 
         <tr>
@@ -70,12 +70,14 @@
     </div>
 </div>
 
-<div class="col-md-12">
-  <a href="http://aaa-assam.in/FOLLOWUP/SEARCHPATIANTREGISTATION.ASPX?ROLE=IC&STATUS=179" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-search" aria-hidden="true"></i> Search Patient Data</a>
-  <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a> 
+<div class="col-md-12" style="margin-bottom: 10px;">
+  <a href="javascript:void(0)" onclick="showPatientInfo( '{{ $float->tpa_claim_reference_number }}' )" class="btn btn-sm btn-primary"> <i class="fa fa-search" aria-hidden="true"></i> Search Patient Data</a>
+
+
+  <a href="http://aaa-assam.in/PreAuthClaims/PreauthDocumentUpload.aspx?hf_caseNo={{ $float->tpa_claim_reference_number }}" class="btn btn-sm btn-danger" target="_blank"> <i class="fa fa-file-word-o" aria-hidden="true"></i> View Documents</a>  
 </div>
 
- {!! Form::model($float_process, array('route' => ['claim.float_data.update', Crypt::encrypt($float->id)], 'id' => 'department_update', 'class' => 'form-horizontal row-border')) !!}
+ {!! Form::model($float_process, array('route' => ['claim.float_data.update', Crypt::encrypt($float_process->id)], 'id' => 'department_update', 'class' => 'form-horizontal row-border')) !!}
 
 <div class="row">
   <div class="col-sm-4">
@@ -178,20 +180,40 @@
         ?>
 
         <div class="row">
-          <div class="col-md-7"><strong>{{ $v->name }}</strong> *</div>
-          <div class="col-md-5">
-            <div class="form-group">
-              <div class="col-sm-7 col-md-7">
-                <div class="input-group">
-                  <div class="btn-group radio-group">
-                     <label class="btn btn-primary @if($float_requirement_value == 1) active @endif ">Yes <input class="claim-req" type="radio" value="1" name="documents_{{$v->id}}" @if($float_requirement_value == 1) checked="checked" @endif  ></label>
-                     <label class="btn btn-primary @if($float_requirement_value == 0) not-active @endif">No <input class="claim-req" type="radio" value="0" name="documents_{{$v->id}}" @if($float_requirement_value == 0) checked="checked" @endif></label>
+          <div class="col-md-5"><strong>{{ $v->name }}</strong> *</div>
+            <div class="col-md-7">
+              <div class="form-group">
+                <div class="col-sm-12 col-md-12">
+                  
+                
+
+                  <div class="custom-radios" >
+                    <div>
+
+                      <div>
+                        <input type="radio" id="color-yes-{{$v->id}}" class="claim-req yup" type="radio" value="1" name="documents_{{$v->id}}" @if($float_requirement_value) checked="checked" @endif >
+                        <label for="color-yes-{{$v->id}}">
+                          <span>
+                          </span>
+                        </label> YES
+                      
+
+                   
+                        <input type="radio" id="color-no-{{$v->id}}" class="claim-req nope" type="radio" value="0" name="documents_{{$v->id}}" @if(!$float_requirement_value) checked="checked" @endif>
+                        <label for="color-no-{{$v->id}}">
+                          <span>
+                          </span>
+                        </label> NO
+                      </div>
+                    </div>
                   </div>
+
+
+
                 </div>
               </div>
             </div>
-          </div>
-        </div> 
+          </div> 
         @endforeach
       </div>
     </div>
@@ -211,21 +233,21 @@
         </div>
 
 
-        <div class="form-group" style="margin-top:100px;" id="canBePro"> 
-            <label class="col-md-5 control-label"><strong>Can Be Processed ?*</strong></label>
-            <div class="col-md-7">
-                <div class="toggle-radio">
-                  <input type="radio" class="can-be-pro" @if($float_process->can_be_processed == 'Yes') checked="checked" @endif name="can_be_processed" id="yes" value="Yes" checked>
-                  <input type="radio" @if($float_process->can_be_processed == 'No') checked="checked" @endif class="can-be-pro" name="can_be_processed" id="no" value="No">
-                  <div class="switch">
-                    <label for="yes">Yes</label>
-                    <label for="no">No</label>
-                    <span></span>
-                  </div>
-                </div>
-            </div>
-          {!! $errors->first('can_be_processed', '<span class="help-inline">:message</span>') !!}
-        </div>
+
+        <?php 
+            $can_be_processed['Yes']  = 'Yes';
+            $can_be_processed['No']   = 'No';
+          ?>
+
+          <div class="form-group {{ $errors->has('total') ? 'has-error' : ''}}">
+            <label class="col-md-12 control-label"><strong>Can Be Processed*</strong></label>
+              <div class="col-md-2">
+                {!! Form::select('can_be_processed', $can_be_processed, $float_process->can_be_processed, ['class' => 'form-control required', 'id' => 'can_be_processed', 'autocomplete' => 'off']) !!}
+              </div>
+            {!! $errors->first('can_be_processed', '<span class="help-inline">:message</span>') !!}
+          </div>
+
+        
 
         <div class="form-group pull-right">
             <button type="submit" class="btn btn-success"><i class="fa fa-telegram" aria-hidden="true"></i> SUBMIT</button>
@@ -236,7 +258,55 @@
 </div>
 
 {!! Form::close() !!}
-      
+
+
+<div id="patientModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+            </div>
+            <div class="modal-body">
+              <p class="col-sm-12">
+                Patient Name in Dashboard : <span id="dashboardPatientName"></span>
+              </p>
+
+              <p class="col-sm-12">
+                Patient Name in Float  : <span id="floatPatientName"></span>
+              </p>
+
+              <hr>
+
+              <p class="col-sm-12">
+                CCN in Dashboard : <span id="dashboardCCN"></span>
+              </p>
+
+              <p class="col-sm-12">
+                CCN in Float  : <span id="floatCCN"></span>
+              </p>
+
+              <hr>
+
+              <p class="col-sm-12">
+                URN in Dashboard : <span id="dashboardURN"></span>
+              </p>
+
+              <p class="col-sm-12">
+                URN in Float  : <span id="floatURN"></span>
+              </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+ 
 @endsection
 
 
@@ -244,112 +314,80 @@
 @section('pageCss')
 
 <style type="text/css">
-.radio-group label {
-   overflow: hidden;
-} .radio-group input {
-    /* This is on purpose for accessibility. Using display: hidden is evil.
-    This makes things keyboard friendly right out tha box! */
-   height: 1px;
-   width: 1px;
-   position: absolute;
-   top: -20px;
-} .radio-group .not-active  {
-   color: #3276b1;
-   background-color: #fff;
+.custom-radios div {
+  display: inline-block;
 }
-.switch {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 150px;
-    height: 50px;
-    text-align: center;
-    margin: -30px 0 0 -75px;
-    background: #00bc9c;
-    transition: all 0.2s ease;
-    border-radius: 25px;
-  }
-  .switch span {
-    position: absolute;
-    width: 20px;
-    height: 4px;
-    top: 50%;
-    left: 50%;
-    margin: -2px 0px 0px -4px;
-    background: #fff;
-    display: block;
-    transform: rotate(-45deg);
-    transition: all 0.2s ease;
-  }
-  .switch span:after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 4px;
-    height: 12px;
-    margin-top: -8px;
-    background: #fff;
-    transition: all 0.2s ease;
-  }
-  input[type=radio] {
-    display: none;
-  }
-  .switch label {
-    cursor: pointer;
-    color: rgba(0,0,0,0.2);
-    width: 60px;
-    line-height: 50px;
-    transition: all 0.2s ease;
-  }
-  label[for=yes] {
-    position: absolute;
-    left: 0px;
-    height: 20px;
-  }
-  label[for=no] {
-    position: absolute;
-    right: 0px;
-  }
-  #no:checked ~ .switch {
-    background: #eb4f37;
-  }
-  #no:checked ~ .switch span {
-    background: #fff;
-    margin-left: -8px;
-  }
-  #no:checked ~ .switch span:after {
-    background: #fff;
-    height: 20px;
-    margin-top: -8px;
-    margin-left: 8px;
-  }
-  #yes:checked ~ .switch label[for=yes] {
-    color: #fff;
-  }
-  #no:checked ~ .switch label[for=no] {
-    color: #fff;
-  }
-textarea:hover, 
-input:hover, 
-textarea:active, 
-input:active, 
-textarea:focus, 
-input:focus,
-button:focus,
-button:active,
-button:hover,
-label:focus,
-.btn:active,
-.btn.active
-{
-    outline:0px !important;
-    -webkit-appearance:none;
+.custom-radios input[type="radio"] {
+  display: none;
+}
+.custom-radios input[type="radio"] + label {
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+.custom-radios input[type="radio"] + label span {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: -1px 4px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  line-height: 34px;
+}
+.custom-radios input[type="radio"] + label span img {
+  opacity: 0;
+  transition: all .3s ease;
+}
+
+.custom-radios input[type="radio"].yup + label span {
+  background-color: #666;
+}
+
+.custom-radios input[type="radio"].nope + label span {
+  background-color: #666;
+}
+
+
+.custom-radios input[type="radio"]:checked + label span {
+  opacity: 1;
+  background-color: #90F25B;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+
+}
+
+
+/** Radio Circle **/
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 13px 13px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
 }
 </style>
 @stop
 
 @section('pageJs')
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
 <script>
 
 
@@ -466,6 +504,58 @@ validateFloatForm = function() {
   return true;
   
 }
+
+
+showPatientInfo = function(ccn_number) {
+  var data = '';
+  var url  = '';
+
+  data += '&ccn='+ccn_number;
+
+  url  += "{{ route('api_get_data') }}";
+
+  $.blockUI();
+  $.ajax({
+    url : url,
+    type : 'get',
+    data : data,
+    dataType : 'json',
+    error : function(resp) { 
+      $.unblockUI();
+      //console.log(resp);
+    },
+
+    success : function(resp) {
+      $.unblockUI();
+
+      $('#dashboardPatientName').text('');
+      $('#dashboardPatientName').text(resp.patient_name);
+
+      $('#floatPatientName').text('');
+      $('#floatPatientName').text($('#pname').text());
+
+      //URN//
+      $('#dashboardURN').text('');
+      $('#dashboardURN').text(resp.urn);
+
+      $('#floatURN').text('');
+      $('#floatURN').text($('#urn').text());
+
+      //CCN
+      $('#dashboardCCN').text('');
+      $('#dashboardCCN').text(resp.ccn);
+
+      $('#floatCCN').text('');
+      $('#floatCCN').text($('#ccn_no').val());
+
+      console.log(resp);
+
+      $('#patientModal').modal('show')
+      
+    }
+  });
+}
+
 
 calculateTotal = function() {
   

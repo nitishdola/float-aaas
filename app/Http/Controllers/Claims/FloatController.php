@@ -25,7 +25,7 @@ class FloatController extends Controller
     } 
 
     public function processFloat(Request $request, $float_id = null) {
-        dd($request);
+     
         DB::beginTransaction();
 
     	$data = $request->all();
@@ -35,10 +35,7 @@ class FloatController extends Controller
 
       	$validator = Validator::make($data, FloatProcess::$rules);
 
-        if ($validator->fails())
-                        {
-                            dd($validator); //This Is works
-                        }
+      
         if ($validator->fails()) return Redirect::back()->withErrors($validator)->withInput();
 
         if($float_process = FloatProcess::create($data)) {
@@ -76,6 +73,7 @@ class FloatController extends Controller
 
         DB::commit();
 
+        return Redirect::route('claim.float_data.view')->with(['message' => 'Processed succeesfully !', 'alert_class' => 'alert-success']);
 
         //proceed to next float
     }
@@ -195,7 +193,65 @@ class FloatController extends Controller
         return view('claim.floats.edit', compact('float', 'float_process', 'float_documents'));  
     }
 
-    public function update(Request $request, $float_id) {
-        dd($request);
+    public function update(Request $request, $float_process_id) {
+        $data = $request->all();
+
+
+        $float_process_id = Crypt::decrypt($float_process_id);
+
+        $float_process    = FloatProcess::findOrfail($float_process_id);
+
+        $data['processed_by']   = Auth::user()->id;
+        $data['float_id']       = $float_process->float_id;
+        $data['current_status'] = 'float_processed_by_claims_coordinator';
+        /*dump($request->all());
+        dd($data);*/
+        $validator = Validator::make($data, FloatProcess::$rules);
+        if ($validator->fails()) return Redirect::back()->withErrors($validator)->withInput();
+        
+        
+
+        $float_process->fill($data);
+
+        DB::beginTransaction();
+        if($float_process->save()) {
+
+            $float = ClaimFloat::find($float_process->float_id);
+            if($request->can_be_processed == 'Yes') {
+                $float->current_status = 'float_processed_by_claims_coordinator';
+            }else{
+                $float->current_status = 'float_halt_by_claims_coordinator';
+            }
+            $float->processed = 1;
+            $float->save();
+
+
+            //remove all float process document files
+            DB::table('float_process_documents')->where('float_process_id', $float_process->id)->delete(); 
+
+            foreach(Helper::claimRequirements() as $k => $v) {
+                $doc_var = '';
+                $doc_var = 'documents_'.$v->id;
+
+                if(isset($request->$doc_var)) {
+                    if($request->$doc_var != '') {
+                        $float_process_document = [];
+
+                        $float_process_document['float_process_id']         = $float_process->id;
+                        $float_process_document['float_requirement_id']     = $v->id;
+                        $float_process_document['float_requirement_value']  = $request->$doc_var;
+
+                        $validator_doc = Validator::make($float_process_document, FloatProcessDocument::$rules);
+                        if ($validator_doc->fails()) return Redirect::back()->withErrors($validator_doc)->withInput();
+
+                        FloatProcessDocument::create($float_process_document);
+                    }
+                }
+            }
+        }
+
+        DB::commit();
+
+        return Redirect::route('claim.float_data.view')->with(['message' => 'Updated succeesfully !', 'alert_class' => 'alert-success']);
     }
 }

@@ -5,7 +5,7 @@
   <div class="col-sm-6 col-lg-3">
     <div class="card text-white bg-primary">
       <div class="card-body pb-0">
-        <div class="text-value">9.823</div>
+        <div class="text-value">{{ $unique_floats }}</div>
         <div>Floats Uploaded</div>
       </div>
       <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
@@ -20,7 +20,7 @@
         <button type="button" class="btn btn-transparent p-0 float-right">
           <i class="icon-location-pin"></i>
         </button>
-        <div class="text-value">9.823</div>
+        <div class="text-value">{{ $float_processed }}</div>
         <div>Claims Processed</div>
       </div>
       <div class="chart-wrapper mt-3 mx-3" style="height:70px;">

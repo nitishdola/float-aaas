@@ -1,12 +1,14 @@
 <?php
 
-Route::get('/home', function () {
+/*Route::get('/home', function () {
     $users[] = Auth::user();
     $users[] = Auth::guard()->user();
     $users[] = Auth::guard('admin')->user();
 
     return view('admin.home');
-})->name('home');
+})->name('home');*/
+
+Route::get('/home', ['as' => 'home', 'middleware' => ['admin'], 'uses' => 'Admin\AdminController@home']);
 
 Route::group(['prefix' => 'users'],function (){
 	 Route::get('/view-all', ['as' => 'user.view_all', 'middleware' => ['admin'], 'uses' => 'Admin\Users\UsersController@index']);
