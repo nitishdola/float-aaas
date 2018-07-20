@@ -15,6 +15,8 @@ class CreateFloatNumbersTable extends Migration
     {
         Schema::create('float_numbers', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

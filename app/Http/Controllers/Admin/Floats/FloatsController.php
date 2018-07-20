@@ -12,6 +12,8 @@ use App\Models\District;
 
 use App\Claim;
 
+use App\Models\FloatNumber, App\Models\Diagnosis, App\Models\Hospital;
+
 
 class FloatsController extends Controller
 {
@@ -50,7 +52,25 @@ class FloatsController extends Controller
 
         		$arr['patient_age'] 	= $v->patient_age;
         		$arr['patient_gender'] 	= $v->patient_gender;
-        		$arr['hospital_name'] 	= $v->hospital_name;
+
+                if($v->hospital_name) {
+                    $hospital_name = trim($v->hospital_name);
+                    //check if hospital exist
+                    $chk = Hospital::whereName($hospital_name);
+
+                    $count = $chk->count();
+
+                    if($count) {
+                        $hospital = $chk->first();
+                    }else{
+                        //create hospital
+                        $hospital_data = [];
+                        $hospital_data['name'] = $hospital_name;
+                        $hospital = Hospital::create($hospital_data);
+                    }
+                }
+        		$arr['hospital_id'] 	= $hospital->id;
+
 
         		$arr['hospital_type'] 	= $v->hospital_type;
         		$arr['date_of_admission'] = date('Y-m-d', strtotime( str_replace('/', '-', $v->date_of_admission)));
@@ -58,7 +78,25 @@ class FloatsController extends Controller
 
         		$arr['package_code'] 	= $v->package_code;
         		$arr['package_name'] 	= $v->package_name;
-        		$arr['diagnosis'] 		= $v->diagnosis;
+
+
+                if($v->diagnosis) {
+                    $diagnosis_name = trim($v->diagnosis);
+                    //check if Diagnosis exist
+                    $chk = Diagnosis::whereName($diagnosis_name);
+
+                    $count = $chk->count();
+
+                    if($count) {
+                        $diagnosis = $chk->first();
+                    }else{
+                        //create diagnsisi
+                        $diagnosis_data = [];
+                        $diagnosis_data['name'] = $diagnosis_name;
+                        $diagnosis = Diagnosis::create($diagnosis_data);
+                    }
+                }
+        		$arr['diagnosis_id'] 		    = $diagnosis->id;
 
         		$arr['claim_amount_base'] 		= $v->claimed_amount_base;
         		$arr['approved_amount_base'] 	= $v->approved_amount_base;
@@ -86,8 +124,28 @@ class FloatsController extends Controller
         		$arr['payee_bank_ifsc_code'] 		= $v->payee_bank_ifsc_code;
         		$arr['utr_date'] = date('Y-m-d', strtotime( str_replace('/', '-', $v->utr_date)));
 
-        		$arr['claim_id'] 		= $v->claim_id;;
-        		$arr['float_number'] 	= $v->float_no;
+        		$arr['claim_id'] 		= $v->claim_id;
+
+
+                if($v->float_number) {
+                    $float_number = trim($v->float_number);
+                    //check if FloatNumber exist
+                    $chk = FloatNumber::whereName($float_number);
+
+                    $count = $chk->count();
+
+                    if($count) {
+                        $float = $chk->first();
+                    }else{
+                        //create diagnsisi
+                        $float_data = [];
+                        $float_data['name'] = $float_number;
+                        $float = FloatNumber::create($float_data);
+                    }
+                }
+        		$arr['float_id'] 	= $float->id;
+
+
         		$arr['net_payable'] 	= $v->net_payable;
 
         		$arr['float_generated_date'] 	= date('Y-m-d', strtotime( str_replace('/', '-', $v->float_generated_date)));
