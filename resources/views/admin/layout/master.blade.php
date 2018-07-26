@@ -17,6 +17,7 @@
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendors/pace-progress/css/pace.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Zebra_datepicker/1.9.10/css/bootstrap/zebra_datepicker.min.css">
     <style>
       .fa-heartbeat {
         color: #F10202;
@@ -46,6 +47,10 @@
                     </div>
               </div>
               @endif
+
+              @if ($errors->any())
+                      {!! implode('', $errors->all('<div class="btn btn-danger">:message</div>')) !!}
+              @endif
             
               @yield('main_content')
               <!--/.col-->
@@ -73,6 +78,8 @@
  
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Zebra_datepicker/1.9.10/zebra_datepicker.min.js"></script>
+
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <script>
@@ -81,6 +88,11 @@
             "bPaginate" : false,
             "bInfo" : false
           });
+
+          $('input.datepicker').Zebra_DatePicker({
+            format : 'Y-m-d'
+          });
+
       } );
     </script>
     @yield('pageJs')

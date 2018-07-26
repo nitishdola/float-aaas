@@ -410,12 +410,14 @@ validateFloatForm = function() {
 
   remarks                   = $('#remarks').val();
 
-  claimRequirementRadios    = $(':radio[class="claim-req"]:checked').length;
-
+  claimRequirementRadios    = $('input.claim-req:checked').length
+  //$(':radio[class="claim-req"]:checked').length;
+  //$(':radio[name="rdQueen"]:checked, :radio[name="rdFruit"]:checked').length;
   //claimRequirementCheck     = $(':checkbox[class="claim-req"]:checked').length;
 
-  canBeProcessed            = $(':radio[class="can-be-pro"]:checked').length;
+  /*canBeProcessed            = $(':radio[class="can-be-pro"]:checked').length;*/
 
+  console.log(claimRequirementRadios);
 
   if(bill_amount_from_hospital == '') {
     alert('Bill amount from hospital is missing !'+bill_amount_from_hospital);
@@ -490,11 +492,11 @@ validateFloatForm = function() {
     return false;
   }
 
-  if(canBeProcessed != 1) {
+  /*if(canBeProcessed != 1) {
     alert('Please select if claim can be processed or not !');
     $(window).scrollTop($('#canBePro').offset().top);
     return false;
-  }
+  }*/
 
 
   return true;

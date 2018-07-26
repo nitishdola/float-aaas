@@ -26,8 +26,8 @@ class FloatsController extends Controller
     	$data = Excel::load($path, function($reader) {})->get();
 
     	DB::beginTransaction();
-    	foreach($data as $k => $v) {
-            if($v->tpa_name != '') {
+    	foreach($data[1] as $k => $v) { //dd($data[1]);
+            if($v->tpa_name != '') { 
         		$arr = [];
         		//check if district exists
         		$district_name = trim($v->beneficiary_district);
@@ -46,8 +46,13 @@ class FloatsController extends Controller
         		$arr['beneficiary_district_id'] = $district->id;
 
         		$arr['tpa_claim_reference_number'] = $v->tpa_claim_reference_no;
-        
-        		$arr['hof_name'] 	= $v->hof_name;
+                
+                if($v->hof_name) {
+                    $arr['hof_name']    = $v->hof_name;
+                }else{
+                    $arr['hof_name']    = 'NOT MENTIONED';
+                }
+        		
         		$arr['patient_name'] = $v->patient_name;
 
         		$arr['patient_age'] 	= $v->patient_age;
@@ -66,13 +71,15 @@ class FloatsController extends Controller
                         //create hospital
                         $hospital_data = [];
                         $hospital_data['name'] = $hospital_name;
+                        $hospital_data['hospital_type'] = $v->hospital_type;
                         $hospital = Hospital::create($hospital_data);
                     }
                 }
         		$arr['hospital_id'] 	= $hospital->id;
 
 
-        		$arr['hospital_type'] 	= $v->hospital_type;
+
+        		//$arr['hospital_type'] 	= $v->hospital_type;
         		$arr['date_of_admission'] = date('Y-m-d', strtotime( str_replace('/', '-', $v->date_of_admission)));
         		$arr['date_of_discharge'] = date('Y-m-d', strtotime( str_replace('/', '-', $v->date_of_discharge)));
 
@@ -112,6 +119,7 @@ class FloatsController extends Controller
 
 
         		$arr['hospital_email_id'] 		= $v->hospital_email_id;
+
         		$arr['hospital_mobile_number'] 	= $v->hospital_mobile_number;
         		$arr['hospital_payee_name'] 	= $v->hospital_payee_name;
 
@@ -126,9 +134,9 @@ class FloatsController extends Controller
 
         		$arr['claim_id'] 		= $v->claim_id;
 
-
-                if($v->float_number) {
-                    $float_number = trim($v->float_number);
+                
+                if($v->float_no) {
+                    $float_number = trim($v->float_no);
                     //check if FloatNumber exist
                     $chk = FloatNumber::whereName($float_number);
 
@@ -139,9 +147,11 @@ class FloatsController extends Controller
                     }else{
                         //create diagnsisi
                         $float_data = [];
-                        $float_data['name'] = $float_number;
-                        $float = FloatNumber::create($float_data);
+                        $float_data['name']         = $float_number;
+                        $float_data['float_date']   = date('Y-m-d', strtotime($request->float_date));
+                        $float = FloatNumber::create($float_data); 
                     }
+
                 }
         		$arr['float_id'] 	= $float->id;
 
@@ -151,6 +161,11 @@ class FloatsController extends Controller
         		$arr['float_generated_date'] 	= date('Y-m-d', strtotime( str_replace('/', '-', $v->float_generated_date)));
         		$arr['float_generated_by'] 		= $v->float_generated_by;
         		$arr['utr_number'] 				= $v->utr_no;
+
+
+                $validator = Validator::make($arr, ClaimFloat::$rules);
+                
+                if ($validator->fails()) return Redirect::back()->withErrors($validator)->withInput();
 
         		ClaimFloat::create($arr);
             }

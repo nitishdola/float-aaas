@@ -30,7 +30,7 @@ class CreateFloatsTable extends Migration
 
             $table->integer('hospital_id', false, true);
 
-            $table->string('hospital_type', 255);  
+            //$table->string('hospital_type', 255);  
             $table->date('date_of_admission');    
             $table->date('date_of_discharge');   
 

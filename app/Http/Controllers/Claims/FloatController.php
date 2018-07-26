@@ -11,11 +11,18 @@ use App\Models\Admin\ClaimFloat;
 use App\Models\District;
 
 use App\Models\FloatProcess, App\Models\FloatProcessDocument;
-
+use App\Models\FloatNumber;
 use App\Claim;
 
 class FloatController extends Controller
 {
+
+    public function viewFreshFloats() {
+        $results = ClaimFloat::where('assigned_to', Auth::user()->id)->where('current_status', 'float_uploaded')->with('float', 'hospital')->orderBy('approval_date', 'DESC')->get();
+
+        return view('claim.home', compact('results'));
+    }
+
     public function viewInfo($float_id = null) {
     	$float_id = Crypt::decrypt($float_id);
 
@@ -93,27 +100,29 @@ class FloatController extends Controller
     }
 
     public function viewAll(Request $request) {
+        $all_floats = FloatNumber::orderBy('name','asc')->where('status',1)->pluck('name','id');
         $result_data = $this->getSearchResult($request);
         $results = $result_data->paginate(600);
-        return view('claim.floats.view_all', compact('results', 'request'));
+        return view('claim.floats.view_all', compact('results', 'request', 'all_floats'));
     }
 
     public function excelExport(Request $request) {
         $result_data = $this->getSearchResult($request);
         $results = $result_data->get();
 
-
+        dd($results);
 
         $arr = [];
         foreach($results as $k => $v) {
             $arr[$k]['Sl No']                   = $k+1;
-            $arr[$k]['Date of Admission']       = $v->date_of_admission;
-            $arr[$k]['Date of Discharge']       = $v->date_of_discharge;
+            $arr[$k]['Hospital']                = $v->hospital->name;
+            $arr[$k]['Date of Admission']       = date('d-m-Y', strtotime($v->date_of_admission));
+            $arr[$k]['Date of Discharge']       = date('d-m-Y', strtotime($v->date_of_discharge));
             $arr[$k]['Package Name']            = $v->package_name;
 
             $float_process = FloatProcess::where('float_id', $v->id)->where('status',1)->first();
        
-            $arr[$k]['Invoice/ Bills from Hopsital (Rs)']      = $float_process->invoice_from_hospital;
+            $arr[$k]['Invoice/ Bills from Hopsital (Rs)']       = $float_process->invoice_from_hospital;
 
             $arr[$k]['Amount as per Package rate (Rs)']         = $float_process->amount_as_per_package;
 
@@ -129,16 +138,28 @@ class FloatController extends Controller
             
         }
         Excel::create('Float-Processed', function( $excel) use($arr){
-            $excel->sheet('Float-Processed', function($sheet) use($arr){
-              $sheet->setTitle('Float-Processed');
+            $excel->sheet('All', function($sheet) use($arr){
+              $sheet->setTitle('All');
 
-              $sheet->cells('A1:M1', function($cells) {
+              $sheet->cells('A1:N1', function($cells) {
                 $cells->setFontWeight('bold');
               });
               
               
               $sheet->fromArray($arr, null, 'A1', false, true);
             });
+
+            $excel->sheet('Hayat', function($sheet) use($arr){
+              $sheet->setTitle('Hayat');
+
+              $sheet->cells('A1:N1', function($cells) {
+                $cells->setFontWeight('bold');
+              });
+              
+              
+              $sheet->fromArray($arr, null, 'A1', false, true);
+            });
+
         })->download('xlsx');
     }
 
@@ -155,18 +176,18 @@ class FloatController extends Controller
             $where['patient_gender']    = strtoupper($request->patient_gender);
         }
 
-        if($request->float_number) {
-            $where['float_number']      = $request->float_number;
+        if($request->float_id) {
+            $where['float_id']      = $request->float_id;
         }
 
-        $result_data = ClaimFloat::where($where)->whereStatus(1)->orderBy('patient_name')->with(['claims_coordinator', 'beneficiary_district']);
+        $result_data = ClaimFloat::where($where)->whereStatus(1)->orderBy('patient_name')->with(['claims_coordinator', 'beneficiary_district', 'hospital', 'float']);
 
         if($request->patient_name) {
             $result_data = $result_data->where('patient_name', 'like', '%' . $request->patient_name . '%');
         } 
 
-        if($request->hospital_name) {
-            $result_data = $result_data->where('hospital_name', 'like', '%' . $request->hospital_name . '%');
+        if($request->hospital_id) {
+            $where['hospital_id']      = $request->hospital_id;
         }
 
         if($request->date_of_discharge_from) {

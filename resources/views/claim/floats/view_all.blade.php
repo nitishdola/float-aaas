@@ -57,22 +57,11 @@
         </div>
       </div>
 
-      <?php 
-        $all_float_nos[1] = 1;
-        $all_float_nos[2] = 2;
-        $all_float_nos[3] = 3;
-        $all_float_nos[4] = 4;
-        $all_float_nos[5] = 5;
-        $all_float_nos[6] = 6;
-        $all_float_nos[7] = 7;
-        $all_float_nos[8] = 8;
-        $all_float_nos[9] = 9;
-        $all_float_nos[10] = 10;
-      ?>
+
       <div class="form-group row">
         <label class="col-md-3 col-form-label" for="hf-password">Float Number</label>
         <div class="col-md-2">
-          {!! Form::select('float_number', $all_float_nos, $request->float_number, ['class' => 'form-control', 'id' => 'float_number', 'placeholder' => 'Select Float', 'required' => true]) !!}
+          {!! Form::select('float_id', $all_floats, $request->float_id, ['class' => 'form-control', 'id' => 'float_id', 'placeholder' => 'Select Float', 'required' => true]) !!}
         </div>
       </div>
 
@@ -129,9 +118,9 @@
                     
                     <td>{{ $v->tpa_claim_reference_number }}</td>
                     <td>{{ $v->patient_name }}</td>
-                    <td>{{ $v->hospital_name }}</td>
-                    <td>{{ $v->date_of_admission }}</td>
-                    <td>{{ $v->date_of_discharge }}</td>
+                    <td>{{ $v->hospital->name }}</td>
+                    <td>{{ date('d-m-Y', strtotime($v->date_of_admission)) }}</td>
+                    <td>{{ date('d-m-Y', strtotime($v->date_of_discharge)) }}</td>
                     <td width="200">{{ trim( str_replace(',', ', ',$v->package_code)) }}</td>
 
                     <td>{{ ucwords(str_replace('_', ' ',$v->current_status)) }}</td>

@@ -20,7 +20,7 @@
                   <th>Hospital Name</th>
                   <th>Date of Admission</th>
                   <th>Date of Discharge</th>
-                  <th>Package Code</th>
+                  <th width="20%">Package Code</th>
                   <th>Current Status</th>
                   <th>View Details</th>
                 </tr>
@@ -33,10 +33,10 @@
                     
                     <td>{{ $v->tpa_claim_reference_number }}</td>
                     <td>{{ $v->patient_name }}</td>
-                    <td>{{ $v->hospital_name }}</td>
+                    <td>{{ $v->hospital->name }}</td>
                     <td>{{ $v->date_of_admission }}</td>
                     <td>{{ $v->date_of_discharge }}</td>
-                    <td>{{ $v->package_code }}</td>
+                    <td>{{ str_replace(',', ' , ', $v->package_code) }}</td>
 
                     <td>{{ ucwords(str_replace('_', ' ',$v->current_status)) }}</td>
                     
@@ -44,7 +44,7 @@
                   </tr>
                 @endforeach
               </tbody>
-            </table>>
+            </table>
             @else
             <div class="alert alert-warning">
               <h3>No Floats Found !</h3>

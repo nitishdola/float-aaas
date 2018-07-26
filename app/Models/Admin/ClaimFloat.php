@@ -34,7 +34,7 @@ class ClaimFloat extends Model
 		'patient_age' => 'required',
 		'patient_gender' => 'required', 
 		'hospital_id' => 'required',
-		'hospital_type' => 'required' ,
+		
 		'date_of_admission' => 'required', 
 		'date_of_discharge' => 'required',
 		'package_code' => 'required',
@@ -48,7 +48,7 @@ class ClaimFloat extends Model
 		'p_intimation_date' => 'required|date|date_format:Y-m-d' ,
 		'claim_upload_date' => 'required|date|date_format:Y-m-d' ,
 		'hospital_pan_number' => 'required',
-		'hospital_email_id' => 'required|email' ,
+		//'hospital_email_id' => 'email' ,
 		'hospital_mobile_number' => 'required' ,
 		'hospital_payee_name' => 'required',
 		'payee_bank_name' => 'required' ,
@@ -62,12 +62,20 @@ class ClaimFloat extends Model
 		'net_payable' => 'required',
 		'float_generated_date' => 'required', 
 		'float_generated_by' => 'required', 
-		'utr_number' => 'required',
+		//'utr_number' => 'required',
     ];
 
 
     public function claims_coordinator() {
     	return $this->belongsTo('App\Claim', 'assigned_to');
+    }
+
+    public function float() {
+    	return $this->belongsTo('App\Models\FloatNumber', 'float_id');
+    }
+
+    public function hospital() {
+    	return $this->belongsTo('App\Models\Hospital', 'hospital_id');
     }
 
 
