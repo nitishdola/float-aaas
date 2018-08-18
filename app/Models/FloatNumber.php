@@ -17,4 +17,9 @@ class FloatNumber extends Model
     	'name' => 'required',
     	'float_date' => 'required|date_format:Y-m-d'
 	];
+
+	public function floats()
+    {
+        return $this->hasMany('App\Models\Admin\ClaimFloat', 'float_id');
+    }
 }

@@ -1550,6 +1550,11 @@ pre code {
   border-bottom: 2px solid #c8ced3;
 }
 
+.table thead {
+  color:#FFF;
+  background: #F58220;
+}
+
 .table tbody + tbody {
   border-top: 2px solid #c8ced3;
 }

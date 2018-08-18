@@ -26,3 +26,6 @@ Route::group(['prefix' => 'floats'],function (){
     Route::post('/assign', ['as' => 'assign_float', 'middleware' => ['admin'], 'uses' => 'Admin\Floats\FloatsController@assignMassFloat']);
 });
 
+Route::group(['prefix' => 'float-numbers'],function (){
+     Route::get('/view-all', ['as' => 'float_number.view_all', 'middleware' => ['admin'], 'uses' => 'Admin\Floats\FloatNumbersController@index']);
+});

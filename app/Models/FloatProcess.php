@@ -31,4 +31,6 @@ class FloatProcess extends Model
   	{
       return $this->belongsTo('App\Models\Admin\ClaimFloat', 'float_id');
   	}
+
+    
 }
